@@ -1,4 +1,4 @@
-fastlane_version "2.28.7"
+fastlane_version "2.28.8"
 
 default_platform :ios
 
@@ -9,7 +9,7 @@ platform :ios do
   before_all do
     ensure_git_status_clean
   end
-  
+
   lane :beta do |values|
     # Fabric generated this lane for deployment to Crashlytics Beta
     # set 'export_method' to 'ad-hoc' if your Crashlytics Beta distribution uses ad-hoc provisioning
