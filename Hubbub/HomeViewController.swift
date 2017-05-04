@@ -6,193 +6,185 @@
 //  Copyright © 2017 All The Hubbub. All rights reserved.
 //
 
-import AlamofireImage
 import Firebase
 import FirebaseDatabaseUI
+import MaterialComponents
 import SnapKit
 import UIKit
 
 class HomeViewController: UIViewController, UITableViewDelegate {
     
     // UI
-    var profileImageView:UIImageView!
-    var usernameLabel:UILabel!
-    var slotsTableView:UITableView!
+    let appBar = MDCAppBar()
+    let headerView = HomeHeaderView()
+    let slotsTableView = UITableView(frame: .zero, style: .plain)
+    let slotsTableFooterView = HomeSlotsTableFooterView()
     
-    // Internal Properties
-    internal var user:FIRUser
-    internal var oauthClient:OAuthClient
-    internal var account:Account?
-    internal var accountRef:FIRDatabaseReference?
+    // Properties
+    var user:FIRUser
+    var oauthClient:OAuthClient
+    
+    // Database
     internal var profileRef:FIRDatabaseReference?
+    internal var profileHandle:UInt?
     internal var slotsQuery:FIRDatabaseQuery?
     internal var slotsDatasource:FUITableViewDataSource?
     
     required init(user:FIRUser, oauthClient:OAuthClient) {
         self.user = user
         self.oauthClient = oauthClient
+        
         super.init(nibName: nil, bundle: nil)
+        
+        addChildViewController(appBar.headerViewController)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        if let ref = profileRef, let handle = profileHandle {
+            ref.removeObserver(withHandle: handle)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        appBar.addSubviewsToParent()
+        appBar.headerViewController.headerView.backgroundColor = ColorPrimary
+        appBar.navigationBar.titleTextAttributes = [
+            NSForegroundColorAttributeName: UIColor.white
+        ]
         
         // Nav Bar
         navigationItem.title = "Hubbub"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(doLogout))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_more_vert_white"), style: .plain, target: self, action: #selector(showActionMenu))
         
-        // Profile Image
-        profileImageView = UIImageView()
-        profileImageView.backgroundColor = UIColor.lightGray
-        view.addSubview(profileImageView)
-        profileImageView.snp.makeConstraints { (make) in
-            make.width.equalTo(150)
-            make.height.equalTo(150)
-            make.top.equalTo(topLayoutGuide.snp.bottom).offset(20)
-            make.left.equalToSuperview().offset(20)
-        }
-        
-        // Username
-        usernameLabel = UILabel()
-        usernameLabel.text = "Loading..."
-        view.addSubview(usernameLabel)
-        usernameLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(profileImageView.snp.top)
-            make.left.equalTo(profileImageView.snp.right).offset(20)
-        }
-        
-        // Your Slots
-        let yourSlotsLabel = UILabel()
-        yourSlotsLabel.text = "Upcoming Lunches:"
-        view.addSubview(yourSlotsLabel)
-        yourSlotsLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(profileImageView.snp.left)
-            make.top.equalTo(profileImageView.snp.bottom).offset(20)
+        // Header
+        headerView.setElevation(points: 2)
+        view.insertSubview(headerView, at: 0)
+        headerView.snp.makeConstraints { (make) in
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.top.equalTo(appBar.headerViewController.headerView.snp.bottom)
         }
         
         // Slots
-        slotsTableView = UITableView(frame: .zero, style: .plain)
         slotsTableView.delegate = self
-        view.addSubview(slotsTableView)
+        slotsTableView.backgroundColor = #colorLiteral(red: 0.9333333333, green: 0.9333333333, blue: 0.9333333333, alpha: 1)
+        slotsTableView.separatorInset = .zero
+        slotsTableView.tableHeaderView = HomeSlotsTableHeaderView(frame: CGRect(x: 0, y: 0, width: 0, height: 60))
+        slotsTableView.tableFooterView = slotsTableFooterView
+        view.insertSubview(slotsTableView, at: 0)
         slotsTableView.snp.makeConstraints { (make) in
-            make.left.equalTo(yourSlotsLabel.snp.left).offset(10)
+            make.left.equalToSuperview()
             make.right.equalToSuperview()
-            make.top.equalTo(yourSlotsLabel.snp.bottom)
+            make.top.equalTo(headerView.snp.bottom)
             make.bottom.equalToSuperview()
         }
-        slotsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "slotsCell")
+        slotsTableView.register(AccountSlotTableViewCell.self, forCellReuseIdentifier: "slotsCell")
         
-        // TODO: Shouldn't be listening to the entire account object because /slots can get large
-        bindAccount()
+        // Join Button
+        let joinButton = MDCFloatingButton(shape: .default)
+        joinButton.setImage(#imageLiteral(resourceName: "ic_add_white"), for: .normal)
+        joinButton.setBackgroundColor(ColorSecondary, for: .normal)
+        joinButton.addTarget(self, action: #selector(presentSlots), for: .touchUpInside)
+        view.addSubview(joinButton)
+        joinButton.snp.makeConstraints { (make) in
+            make.right.equalToSuperview().offset(-20)
+            make.bottom.equalToSuperview().offset(-20)
+        }
         
         bindSlots()
         bindProfile()
     }
     
-    deinit {
-        if let ref = profileRef {
-            ref.removeAllObservers()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let indexPath = slotsTableView.indexPathForSelectedRow {
+            slotsTableView.deselectRow(at: indexPath, animated: animated)
         }
-        if let ref = accountRef {
-            ref.removeAllObservers()
-        }
-        if let query = slotsQuery {
-            query.removeAllObservers()
-        }
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 
     // MARK: Internal
+    
+    internal func showActionMenu() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let logout = UIAlertAction(title: "Sign out", style: .destructive) { [unowned self] (action) in
+            self.doLogout()
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(logout)
+        alert.addAction(cancel)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    internal func presentSlots() {
+        let slotsVC = SlotsViewController(user: user)
+        navigationController?.pushViewController(slotsVC, animated: true)
+    }
     
     internal func doLogout() {
         try? FIRAuth.auth()?.signOut()
     }
     
     internal func bindSlots() {
-        // Fetch the next 10 slots (including up to an hour ago to account for ongoing slots)
-        let startTime = Date().timeIntervalSince1970 - (60*60)
-        slotsQuery = FIRDatabase.database().reference().child("slots")
-            .queryOrdered(byChild: "timestamp")
-            .queryStarting(atValue: startTime)
+        // Fetch the next 10 slots this user has joined
+        slotsQuery = FIRDatabase.database().reference(withPath: "accounts/\(user.uid)/slots")
+            .queryOrdered(byChild: "endAt")
+            .queryStarting(atValue: Date().timeIntervalSince1970)
             .queryLimited(toFirst: 10)
         
-        slotsDatasource = slotsTableView.bind(to: slotsQuery!, populateCell: { [unowned self] (tableView, indexPath, snapshot) -> UITableViewCell in
+        slotsDatasource = slotsTableView.bind(to: slotsQuery!, populateCell: { (tableView, indexPath, snapshot) -> UITableViewCell in
             let cell = tableView.dequeueReusableCell(withIdentifier: "slotsCell", for: indexPath)
-            if let slot = Slot(snapshot: snapshot), var name = slot.name {
-                if (self.account?.hasRequestForSlot(id: slot.id) ?? false) {
-                    name += " \u{2611}"
-                }
-                cell.textLabel?.text = name
+            if let slot = Slot(snapshot: snapshot) {
+                (cell as! AccountSlotTableViewCell).slot = slot
+                cell.isUserInteractionEnabled = (slot.topic != nil)
             }
             return cell
         })
     }
     
     internal func bindProfile() {
-        profileRef = FIRDatabase.database().reference().child("profile").child(user.uid)
-        profileRef!.observe(.value, with: { [unowned self] (snapshot) in
-            let data = snapshot.value as? [String : AnyObject] ?? [:]
-            if let photo = (data["photo"] as? String), let photoURL = URL(string: photo) {
-                self.profileImageView.af_setImage(withURL: photoURL)
-            }
-            if let username = data["handle"] as? String {
-                self.usernameLabel.text = username
-            }
+        profileRef = FIRDatabase.database().reference(withPath: "profiles/\(user.uid)")
+        profileHandle = profileRef!.observe(.value, with: { [weak self] (snapshot) in
+            guard let strongSelf = self else { return }
+            
+            strongSelf.headerView.profile = Profile(snapshot: snapshot)
         })
     }
     
-    internal func bindAccount() {
-        accountRef = FIRDatabase.database().reference().child("account").child(user.uid)
-        accountRef!.observe(.value, with: { [unowned self] (snapshot) in
-            self.account = Account(snapshot: snapshot)
-            self.slotsTableView.reloadData()
-        })
-    }
-    
-    internal func toggleSlot(slot:Slot) {
-        // Capture some data so the block below doesn't need self
-        let userID = user.uid
-
-        // Start by fetching the user's existing request for the given day, if any
-        let rootRef = FIRDatabase.database().reference()
-        rootRef.child("account/\(userID)/slots/\(slot.id)").observeSingleEvent(of: .value, with: { (snapshot) in
-            // Build a set of updates
-            var updates = [String:Any?]()
-
-            if let existingSlot = Slot(snapshot: snapshot) {
-                // If a topic has already been assigned, the user can't leave the slot!
-                if existingSlot.topicID != nil {
-                    return
-                }
-
-                // Leave the slot by deleting the request and the account entry
-                let val:Any? = nil
-                updates["requests/\(existingSlot.id)/\(userID)"] = val
-                updates["account/\(userID)/slots/\(existingSlot.id)"] = val
-            } else {
-                // Create a new request
-                updates["requests/\(slot.id)/\(userID)"] = true
-                
-                // Create or update an account slot
-                updates["account/\(userID)/slots/\(slot.id)"] = ["timestamp": slot.timestamp]
-            }
-
-            // Apply all updates atomically
-            rootRef.updateChildValues(updates)
-        })
+    internal func manageFooterView() {
+        if (slotsDatasource?.count == 0) {
+            slotsTableView.tableFooterView = slotsTableFooterView
+        } else {
+            slotsTableView.tableFooterView = nil
+        }
     }
     
     // MARK: UITableViewDelegate
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 75
+    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let slotSnapshot = slotsDatasource?.items[indexPath.row] {
-            if let slot = Slot(snapshot: slotSnapshot) {
-                toggleSlot(slot: slot)
-            }
+        if let snapshot = slotsDatasource?.snapshot(at: indexPath.row), let slot = Slot(snapshot: snapshot) {
+            let beaconVC = BeaconViewController(slot: slot)
+            navigationController?.pushViewController(beaconVC, animated: true)
         }
-        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        manageFooterView()
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        manageFooterView()
     }
 }
