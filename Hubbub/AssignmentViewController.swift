@@ -213,7 +213,7 @@ class AssignmentViewController: UIViewController, UICollectionViewDataSource, UI
         switch indexPath.section {
         case TopicSectionNumber:
             icon = #imageLiteral(resourceName: "ic_subject")
-            topic = Topic(data: ["id": "foo", "name": "Firebase"])
+            topic = self.topic
         case LocationSectionNumber:
             icon = #imageLiteral(resourceName: "ic_location_on")
             title = slot.location
