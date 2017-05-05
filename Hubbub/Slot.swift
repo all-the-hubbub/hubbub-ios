@@ -28,6 +28,15 @@ class Slot: NSObject {
         }
     }
     
+    var endDate:Date? {
+        get {
+            if self.endAt == nil {
+                return nil
+            }
+            return Date(timeIntervalSince1970: TimeInterval(self.endAt!))
+        }
+    }
+    
     init?(key:String, data:[String:Any]) {
         self.id = key
         self.name = data["name"] as? String

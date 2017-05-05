@@ -20,18 +20,27 @@ class AssignmentHeaderView: UIView {
     var slot: Slot? {
         didSet {
             titleLabel.text = slot?.name
+            
+            var desc = ""
             if let startDate = slot?.startDate {
-                descriptionLabel.text = dateFormatter.string(from: startDate)
-            } else {
-                descriptionLabel.text = ""
+                desc = startFormatter.string(from: startDate)
+                if let endDate = slot?.endDate {
+                    desc += " - " + endFormatter.string(from: endDate)
+                }
             }
+            descriptionLabel.text = desc
         }
     }
     
     // Internal
-    internal lazy var dateFormatter: DateFormatter = {
+    internal lazy var startFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "EEEE, MMM d\nh:mm a"
+        return f
+    }()
+    internal lazy var endFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "h:mm a"
         return f
     }()
     
