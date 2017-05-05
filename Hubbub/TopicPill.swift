@@ -13,7 +13,7 @@ class TopicPill: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
         textColor = #colorLiteral(red: 0, green: 0.5921568627, blue: 0.6549019608, alpha: 1)
-        backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9647058824, blue: 0.9764705882, alpha: 1)
+        layer.backgroundColor = #colorLiteral(red: 0.8784313725, green: 0.9647058824, blue: 0.9764705882, alpha: 1).cgColor
         
         textAlignment = .center
         font = UIFont.boldSystemFont(ofSize: 12)
