@@ -12,10 +12,11 @@ import SnapKit
 import UIKit
 import WebKit
 
-class BeaconViewController: UIViewController {
+class BeaconViewController: UIViewController, WKNavigationDelegate {
 
     // UI
     let appBar = MDCAppBar()
+    let spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     
     // Properties
     var slot: Slot
@@ -40,13 +41,6 @@ class BeaconViewController: UIViewController {
         // AppBar
         appBar.addSubviewsToParent()
         appBar.headerViewController.headerView.backgroundColor = MDCPalette.blueGrey().tint800
-        appBar.navigationBar.titleTextAttributes = [
-            NSForegroundColorAttributeName: UIColor.white
-        ]
-        if let navShadowLayer = appBar.headerViewController.headerView.shadowLayer as? MDCShadowLayer {
-            navShadowLayer.elevation = 3
-        }
-        navigationItem.title = "Find your group"
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: #imageLiteral(resourceName: "ic_close_white"),
             style: .done,
@@ -56,16 +50,24 @@ class BeaconViewController: UIViewController {
         
         // WebView
         let webView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
-        view.addSubview(webView)
+        webView.backgroundColor = MDCPalette.blueGrey().tint800
+        webView.scrollView.backgroundColor = webView.backgroundColor
+        webView.isUserInteractionEnabled = false
+        webView.navigationDelegate = self
+        view.insertSubview(webView, at: 0)
         webView.snp.makeConstraints { (make) in
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
-            make.top.equalTo(appBar.headerViewController.headerView.snp.bottom)
-            make.bottom.equalToSuperview()
+            make.edges.equalToSuperview()
         }
         
+        // Spinner
+        view.addSubview(spinner)
+        spinner.snp.makeConstraints { (make) in
+            make.center.equalToSuperview()
+        }
+        spinner.startAnimating()
+        
         // Load the beacon page
-        if let url = URL(string: "https://hubbub-159904.firebaseapp.com/beacon/\(slot.id)/\(topic.id)") {
+        if let url = beaconURL() {
             webView.load(URLRequest(url: url))
         }
     }
@@ -78,5 +80,24 @@ class BeaconViewController: UIViewController {
     
     internal func back() {
         dismiss(animated: true, completion: nil)
+    }
+    
+    internal func beaconURL() -> URL? {
+        let urlComponents = NSURLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "hubbub-159904.firebaseapp.com"
+        urlComponents.path = "/assets/beacon.html"
+        urlComponents.queryItems = [
+            URLQueryItem(name: "slotId", value: slot.id),
+            URLQueryItem(name: "topicId", value: topic.id),
+            URLQueryItem(name: "topicName", value: topic.name)
+        ]
+        return urlComponents.url
+    }
+    
+    // MARK: WKWebViewNavigationDelegate
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        spinner.stopAnimating()
     }
 }
