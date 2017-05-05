@@ -21,8 +21,11 @@ class HomeSlotsTableFooterView: UIView {
         label.textAlignment = .center
         addSubview(label)
         label.snp.makeConstraints { (make) in
-            make.left.equalToSuperview().offset(66)
-            make.right.equalToSuperview().offset(-66)
+            // Decrease priority to respect UITableView settings its own width==0 constraint
+            // when the footer isn't being shown, but use ours when that constraint is removed.
+            make.left.equalToSuperview().offset(66).priority(750)
+            make.right.equalToSuperview().offset(-66).priority(750)
+            
             make.top.equalToSuperview().offset(22)
         }
     }
