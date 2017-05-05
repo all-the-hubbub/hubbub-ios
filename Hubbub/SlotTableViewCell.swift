@@ -39,6 +39,7 @@ class DateView: UIView {
     
     init() {
         super.init(frame: .zero)
+        setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
         
         numberLabel.font = UIFont.boldSystemFont(ofSize: 18)
         numberLabel.textAlignment = .center
