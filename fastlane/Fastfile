@@ -10,12 +10,11 @@ platform :ios do
   #   ensure_git_status_clean
   # end
 
-  lane :increment_build_number do
-    increment_build_number(build_number: ENV['CI_BUILD_ID'])
-  end
-
   lane :beta do |values|
     # Fabric generated this lane for deployment to Crashlytics Beta
+
+    # increment_build_number(build_number: ENV['CI_BUILD_ID'])
+
     # set 'export_method' to 'ad-hoc' if your Crashlytics Beta distribution uses ad-hoc provisioning
     gym(scheme: 'Hubbub', export_method: 'development')
 
