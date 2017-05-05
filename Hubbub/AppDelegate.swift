@@ -23,6 +23,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var user: FIRUser?
     let oauthClient = GitHubOAuthClient()
     let rootViewController = UINavigationController()
+    
+    lazy var appVersionString: String? = {
+        guard let info = Bundle.main.infoDictionary else { return nil }
+        if let version = info["CFBundleShortVersionString"] as? String, let build = info["CFBundleVersion"] as? String {
+            return "Hubbub \(version) (\(build))"
+        }
+        return nil
+    }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Initialize Fabric

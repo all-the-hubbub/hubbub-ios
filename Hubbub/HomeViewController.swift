@@ -114,7 +114,8 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     // MARK: Internal
     
     internal func showActionMenu() {
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let title = (UIApplication.shared.delegate as? AppDelegate)?.appVersionString
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
         let logout = UIAlertAction(title: "Sign out", style: .destructive) { [unowned self] (action) in
             self.doLogout()
         }
