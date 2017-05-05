@@ -32,7 +32,7 @@ platform :ios do
 
     # You can notify your team in chat that a beta build has been uploaded
     slack(
-      slack_url: "https://hooks.slack.com/services/#{ENV['SLACK_HOOK']}",
+      slack_url: ENV['SLACK_URL'],
       channel: "crashlytics",
       message: "Successfully uploaded a beta release - see it at https://fabric.io/_/beta"
     )
