@@ -187,14 +187,30 @@ class SlotsViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func toggleSlotTableViewCell(_ cell: ToggleSlotTableViewCell, didSetToggleTo value: Bool) {
         guard let slotId = cell.slot?.id else { return }
-        
+
         let params: Parameters = [
             "id": slotId,
             "userId": user.uid
         ]
-        
         let call = value ? "joinSlot" : "leaveSlot"
         let url = "https://us-central1-hubbub-159904.cloudfunctions.net/\(call)"
-        _ = Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding.default)
+        
+        user.getTokenWithCompletion { (token, err) in
+            if err != nil {
+                print("Error getting user token: \(err)")
+                return
+            }
+            
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer \(token!)",
+            ]
+            _ = Alamofire.request(
+                url,
+                method: .post,
+                parameters: params,
+                encoding: JSONEncoding.default,
+                headers: headers
+            )
+        }
     }
 }
