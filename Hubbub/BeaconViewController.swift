@@ -7,6 +7,7 @@
 //
 
 import MaterialComponents
+import MaterialComponents.MaterialPalettes
 import SnapKit
 import UIKit
 import WebKit
@@ -18,10 +19,14 @@ class BeaconViewController: UIViewController {
     
     // Properties
     var slot: Slot
+    var topic: Topic
     
-    required init(slot: Slot) {
+    required init(slot: Slot, topic: Topic) {
         self.slot = slot
+        self.topic = topic
+        
         super.init(nibName: nil, bundle: nil)
+        
         addChildViewController(appBar.headerViewController)
     }
     
@@ -32,19 +37,18 @@ class BeaconViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // AppBar
         appBar.addSubviewsToParent()
-        appBar.headerViewController.headerView.backgroundColor = ColorPrimary
+        appBar.headerViewController.headerView.backgroundColor = MDCPalette.blueGrey().tint800
         appBar.navigationBar.titleTextAttributes = [
             NSForegroundColorAttributeName: UIColor.white
         ]
         if let navShadowLayer = appBar.headerViewController.headerView.shadowLayer as? MDCShadowLayer {
             navShadowLayer.elevation = 3
         }
-        
-        // Nav Bar
         navigationItem.title = "Find your group"
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: #imageLiteral(resourceName: "ic_arrow_back_white"),
+            image: #imageLiteral(resourceName: "ic_close_white"),
             style: .done,
             target: self,
             action: #selector(back)
@@ -61,7 +65,7 @@ class BeaconViewController: UIViewController {
         }
         
         // Load the beacon page
-        if let topic = slot.topic, let url = URL(string: "https://hubbub-159904.firebaseapp.com/beacon/\(slot.id)/\(topic.id)") {
+        if let url = URL(string: "https://hubbub-159904.firebaseapp.com/beacon/\(slot.id)/\(topic.id)") {
             webView.load(URLRequest(url: url))
         }
     }
@@ -73,6 +77,6 @@ class BeaconViewController: UIViewController {
     // MARK: Internal
     
     internal func back() {
-        _ = navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
 }

@@ -1,23 +1,24 @@
 //
-//  HomeHeaderView.swift
+//  AssignmentMemberCollectionViewCell.swift
 //  Hubbub
 //
-//  Created by Justin Rosenthal on 4/28/17.
+//  Created by Justin Rosenthal on 5/4/17.
 //  Copyright © 2017 All The Hubbub. All rights reserved.
 //
 
 import AlamofireImage
-import MaterialComponents
 import SnapKit
 import UIKit
 
-class HomeHeaderView: UIView {
+class AssignmentMemberCollectionViewCell: UICollectionViewCell {
     
+    // UI
     let profileImageView:UIImageView = UIImageView()
     let nameLabel:UILabel = UILabel()
     let handleLabel:UILabel = UILabel()
-
-    var profile:Profile? {
+    
+    // Properties
+    var profile: Profile? {
         didSet {
             nameLabel.text = profile?.name
             handleLabel.text = profile?.handle
@@ -31,19 +32,17 @@ class HomeHeaderView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = ColorPrimary
         
         addSubview(profileImageView)
         profileImageView.snp.makeConstraints { (make) in
-            make.width.equalTo(56)
-            make.height.equalTo(56)
-            make.left.equalToSuperview().offset(20)
-            make.top.equalToSuperview().offset(10)
-            make.bottom.equalToSuperview().offset(-20)
+            make.width.equalTo(36)
+            make.height.equalTo(36)
+            make.left.equalToSuperview().offset(60)
+            make.centerY.equalToSuperview()
         }
         
-        nameLabel.font = UIFont.systemFont(ofSize: 24)
-        nameLabel.textColor = .white
+        nameLabel.font = UIFont.systemFont(ofSize: 14)
+        nameLabel.alpha = 0.87
         addSubview(nameLabel)
         nameLabel.snp.makeConstraints { (make) in
             make.left.equalTo(profileImageView.snp.right).offset(20)
@@ -52,7 +51,7 @@ class HomeHeaderView: UIView {
         }
         
         handleLabel.font = UIFont.systemFont(ofSize: 14)
-        handleLabel.textColor = .white
+        handleLabel.alpha = 0.54
         addSubview(handleLabel)
         handleLabel.snp.makeConstraints { (make) in
             make.left.equalTo(nameLabel.snp.left)
@@ -63,17 +62,5 @@ class HomeHeaderView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override class var layerClass: AnyClass {
-        return MDCShadowLayer.self
-    }
-    
-    var shadowLayer: MDCShadowLayer {
-        return self.layer as! MDCShadowLayer
-    }
-    
-    func setElevation(points: CGFloat) {
-        self.shadowLayer.elevation = points
     }
 }

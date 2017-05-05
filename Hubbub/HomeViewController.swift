@@ -174,9 +174,9 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let snapshot = slotsDatasource?.snapshot(at: indexPath.row), let slot = Slot(snapshot: snapshot) {
-            let beaconVC = BeaconViewController(slot: slot)
-            navigationController?.pushViewController(beaconVC, animated: true)
+        if let snapshot = slotsDatasource?.snapshot(at: indexPath.row), let slot = Slot(snapshot: snapshot), let topic = slot.topic {
+            let assignmentVC = AssignmentViewController(slot: slot, topic: topic)
+            navigationController?.pushViewController(assignmentVC, animated: true)
         }
     }
     
