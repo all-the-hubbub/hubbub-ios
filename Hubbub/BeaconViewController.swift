@@ -12,10 +12,9 @@ import SnapKit
 import UIKit
 import WebKit
 
-class BeaconViewController: UIViewController, WKNavigationDelegate {
+class BeaconViewController: WebViewController, WKNavigationDelegate {
 
     // UI
-    let appBar = MDCAppBar()
     let spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     
     // Properties
@@ -25,10 +24,7 @@ class BeaconViewController: UIViewController, WKNavigationDelegate {
     required init(slot: Slot, topic: Topic) {
         self.slot = slot
         self.topic = topic
-        
         super.init(nibName: nil, bundle: nil)
-        
-        addChildViewController(appBar.headerViewController)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -38,26 +34,11 @@ class BeaconViewController: UIViewController, WKNavigationDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // AppBar
-        appBar.addSubviewsToParent()
-        appBar.headerViewController.headerView.backgroundColor = MDCPalette.blueGrey().tint800
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: #imageLiteral(resourceName: "ic_close_white"),
-            style: .done,
-            target: self,
-            action: #selector(back)
-        )
-        
         // WebView
-        let webView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
-        webView.backgroundColor = MDCPalette.blueGrey().tint800
-        webView.scrollView.backgroundColor = webView.backgroundColor
-        webView.isUserInteractionEnabled = false
-        webView.navigationDelegate = self
-        view.insertSubview(webView, at: 0)
-        webView.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
-        }
+        webView!.backgroundColor = MDCPalette.blueGrey().tint800
+        webView!.scrollView.backgroundColor = webView!.backgroundColor
+        webView!.isUserInteractionEnabled = false
+        webView!.navigationDelegate = self
         
         // Spinner
         view.addSubview(spinner)
@@ -68,19 +49,11 @@ class BeaconViewController: UIViewController, WKNavigationDelegate {
         
         // Load the beacon page
         if let url = beaconURL() {
-            webView.load(URLRequest(url: url))
+            loadURL(url)
         }
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    
     // MARK: Internal
-    
-    internal func back() {
-        dismiss(animated: true, completion: nil)
-    }
     
     internal func beaconURL() -> URL? {
         let urlComponents = NSURLComponents()

@@ -39,7 +39,7 @@ class LoginViewController: UIViewController {
         container.snp.makeConstraints { (make) in
             make.left.equalToSuperview()
             make.right.equalToSuperview()
-            make.centerY.equalToSuperview()
+            make.centerY.equalToSuperview().offset(-20)
         }
 
         // Hero Icon
@@ -93,31 +93,44 @@ class LoginViewController: UIViewController {
             make.top.equalTo(tagline.snp.bottom).offset(40)
             make.bottom.equalToSuperview()
         }
+        
+        // Privacy Policy
+        let privacyPolicy = UIButton(type: .system)
+        privacyPolicy.setTitle("Privacy Policy", for: .normal)
+        privacyPolicy.setTitleColor(.white, for: .normal)
+        privacyPolicy.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        privacyPolicy.alpha = 0.5
+        privacyPolicy.addTarget(self, action: #selector(showPrivacyPolicy), for: .touchUpInside)
+        view.addSubview(privacyPolicy)
+        privacyPolicy.snp.makeConstraints { (make) in
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-10)
+        }
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
+    
+    // MARK: Internal
 
-    func doLogin() {
+    internal func doLogin() {
         oauthClient.authorize(from: self, callback: { [unowned self] (accessToken, error) in
             if (error != nil) {
                 print("OAuth was cancelled or failed: \(error)")
                 return
             }
-
             print("OAuth successful: access_token=\(accessToken!)")
+            
+            // Fabric event tracking
+            Answers.logLogin(withMethod: "Github", success: true, customAttributes: nil)
+            
             self.loginButton.isEnabled = false
             self.firebaseSignIn(accessToken: accessToken!)
         })
-
-        // Fabric event tracking
-        Answers.logLogin(withMethod: "Github",
-                         success: true,
-                         customAttributes: [:])
     }
 
-    func firebaseSignIn(accessToken: String) {
+    internal func firebaseSignIn(accessToken: String) {
         let credential = FIRGitHubAuthProvider.credential(withToken: accessToken)
         FIRAuth.auth()?.signIn(with: credential) { (user, error) in
             if (error != nil) {
@@ -125,6 +138,14 @@ class LoginViewController: UIViewController {
                 return
             }
             FIRDatabase.database().reference(withPath: "accounts/\(user!.uid)/githubToken").setValue(accessToken)
+        }
+    }
+    
+    internal func showPrivacyPolicy() {
+        if let url = URL(string: "https://hubbub-159904.firebaseapp.com/assets/privacyPolicy.html") {
+            let vc = WebViewController(initialURL: url)
+            vc.navigationItem.title = "Privacy Policy"
+            present(vc, animated: true, completion: nil)
         }
     }
 }
