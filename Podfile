@@ -11,6 +11,7 @@ target 'Hubbub' do
   pod 'Firebase/Auth'
   pod 'Firebase/Core'
   pod 'Firebase/Database'
+  pod 'Firebase/RemoteConfig'
   pod 'FirebaseUI/Database'
   pod 'MaterialComponents/AppBar'
   pod 'MaterialComponents/Buttons'
