@@ -24,7 +24,6 @@ class CheckBox: UIButton {
         isChecked = false
         super.init(frame: frame)
         self.tintColor = ColorSecondary
-        updateImage()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -56,9 +55,10 @@ class ToggleSlotTableViewCell: SlotTableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        checkBox.contentEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10)
         contentView.addSubview(checkBox)
         checkBox.snp.makeConstraints { (make) in
-            make.right.equalToSuperview().offset(-20)
+            make.right.equalToSuperview().offset(-10)
             make.centerY.equalToSuperview()
         }
         checkBox.addTarget(self, action: #selector(toggle), for: .touchUpInside)
