@@ -54,7 +54,8 @@ platform :ios do
     # 2) Import distribution certificate
 
     cert(
-      development: true
+      development: true,
+      username: ENV["FASTLANE_USERNAME"]
     )
 
     # 3) Download provisioning profile
