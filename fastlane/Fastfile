@@ -54,8 +54,8 @@ platform :ios do
     # 2) Import distribution certificate
 
     import_certificate(
-      certificate_path: "certificates/dev.p12",   #TODO JUDY: encrypt and add this certificate... to.... travis?
-      certificate_password: ENV["KEY_PASSWORD"],  #TODO JUDY: add this env variable
+      certificate_path: "certificates/dev.p12",
+      certificate_password: ENV["KEY_PASSWORD"],
       keychain_name: keychain_name
     )
 
