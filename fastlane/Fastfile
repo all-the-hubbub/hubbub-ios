@@ -55,8 +55,7 @@ platform :ios do
 
     cert(
       development: true,
-      username: ENV["FASTLANE_USERNAME"],
-      session: ENV["FASTLANE_SESSION"]
+      username: ENV["FASTLANE_USERNAME"]
     )
 
     # 3) Download provisioning profile
@@ -64,16 +63,15 @@ platform :ios do
     sigh(
       development: true,
       username: ENV["FASTLANE_USERNAME"],
-      session: ENV["FASTLANE_SESSION"],
       app_identifier: '*',
       force: true # pick up any new devices
     )
 
     # 4) Increment the build number - in our case, we're using the travis-ci build number
 
-    # increment_build_number(
-    #   build_number: ENV["CI_BUILD_ID"]
-    # )
+    increment_build_number(
+      build_number: ENV["TRAVIS_BUILD_NUMBER"]
+    )
 
     # 5) Build the app
 
