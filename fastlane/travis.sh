@@ -2,6 +2,6 @@
 
 # if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
   git status
-  fastlane beta
+  fastlane travis_deploy
   exit $?
 # fi

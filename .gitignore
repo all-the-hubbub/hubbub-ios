@@ -69,3 +69,4 @@ vendor/
 # Secrets
 *.p12
 *.mobileprovision
+*.cer

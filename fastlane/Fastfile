@@ -53,24 +53,12 @@ platform :ios do
 
     # 2) Import distribution certificate
 
-    # import_certificate(
-    #   certificate_path: "scripts/travis/certificate.p12",   #TODO JUDY: encrypt and add this certificate... to.... travis?
-    #   certificate_password: ENV["KEY_PASSWORD"],  #TODO JUDY: add this env variable
-    #   keychain_name: keychain_name
-    # )
-
     cert(
       development: true
     )
 
     # 3) Download provisioning profile
 
-    # sigh(
-    #   username: ENV["FASTLANE_USER"],
-    #   provisioning_name: "your_provisioning_profile_name",
-    #   team_id: ENV["TEAM_ID"], # BW42P47BVX
-    #   cert_id: ENV["CERT_ID"]  #ADD ENV VAR DRDS2H8YN4
-    # )
     sigh(
       development: true,
       app_identifier: '*',
@@ -79,18 +67,16 @@ platform :ios do
 
     # 4) Increment the build number - in our case, we're using the travis-ci build number
 
-    increment_build_number(
-      build_number: ENV["CI_BUILD_ID"]
-    )
+    # increment_build_number(
+    #   build_number: ENV["CI_BUILD_ID"]
+    # )
 
     # 5) Build the app
 
     gym(
       clean: true,
       scheme: "Hubbub",
-      export_method: "development",
-      # codesigning_identity: "iPhone Developer: Judy Tuan (BW42P47BVX)",
-      # xcargs: "PROVISIONING_PROFILE_SPECIFIER='Development_*.mobileprovision'"
+      export_method: "development"
     )
 
     # 6) Release to Crashlytics Beta
