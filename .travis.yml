@@ -1,4 +1,7 @@
 language: objective-c
+cache:
+- bundler
+- cocoapods
 osx_image: xcode8.3
 script:
 - ./fastlane/travis.sh
