@@ -24,7 +24,7 @@ class GitHubOAuthClient: OAuthClient {
         "client_secret": "aa4b736a317532b47202cb7c9820bba587e64a70",
         "authorize_uri": "https://github.com/login/oauth/authorize",
         "token_uri": "https://github.com/login/oauth/access_token",
-        "scope": "public_repo,user:email",
+        "scope": "",
         "redirect_uris": [GitHubOAuthClient.REDIRECT_URL],
         "secret_in_body": true,
         "verbose": true,
