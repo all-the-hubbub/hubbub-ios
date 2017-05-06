@@ -99,7 +99,7 @@ class SlotsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     internal func fetchSlots(startAt:TimeInterval, limit:UInt) {
-        slotsQuery = FIRDatabase.database().reference(withPath: "slots")
+        slotsQuery = FIRDatabase.database().reference(withPath: "events")
             .queryOrdered(byChild: "startAt")
             .queryStarting(atValue: startAt)
             .queryLimited(toFirst: limit)
@@ -122,7 +122,7 @@ class SlotsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     internal func bindAccountSlots(startAt:TimeInterval, limit:UInt) {
-        accountSlotsQuery = FIRDatabase.database().reference(withPath: "accounts/\(user.uid)/slots")
+        accountSlotsQuery = FIRDatabase.database().reference(withPath: "accounts/\(user.uid)/events")
             .queryOrdered(byChild: "startAt")
             .queryStarting(atValue: startAt)
             .queryLimited(toFirst: limit)
@@ -192,7 +192,7 @@ class SlotsViewController: UIViewController, UITableViewDataSource, UITableViewD
             "id": slotId,
             "userId": user.uid
         ]
-        let call = value ? "joinSlot" : "leaveSlot"
+        let call = value ? "joinEvent" : "leaveEvent"
         let url = "https://us-central1-hubbub-159904.cloudfunctions.net/\(call)"
         
         user.getTokenWithCompletion { (token, err) in

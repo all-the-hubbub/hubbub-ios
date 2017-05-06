@@ -136,7 +136,7 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     
     internal func bindSlots() {
         // Fetch the next 10 slots this user has joined
-        slotsQuery = FIRDatabase.database().reference(withPath: "accounts/\(user.uid)/slots")
+        slotsQuery = FIRDatabase.database().reference(withPath: "accounts/\(user.uid)/events")
             .queryOrdered(byChild: "endAt")
             .queryStarting(atValue: Date().timeIntervalSince1970)
             .queryLimited(toFirst: 10)
