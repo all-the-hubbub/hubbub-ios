@@ -65,3 +65,7 @@ fastlane/test_output
 # Ruby
 .bundle/
 vendor/
+
+# Secrets
+*.p12
+*.mobileprovision

@@ -1,4 +1,4 @@
-fastlane_version "2.28.8"
+fastlane_version "2.28.9"
 
 default_platform :ios
 
@@ -6,14 +6,13 @@ platform :ios do
   #
   # Learn more here: https://github.com/fastlane/setups/blob/master/samples-ios/distribute-beta-build.md 🚀
   #
-  # before_all do
-  #   ensure_git_status_clean
-  # end
+  before_all do
+    cocoapods
+  end
 
+  desc "Deploy new build to Crashlytics Beta and notify our testers"
   lane :beta do |values|
     # Fabric generated this lane for deployment to Crashlytics Beta
-
-    # increment_build_number(build_number: ENV['CI_BUILD_ID'])
 
     # set 'export_method' to 'ad-hoc' if your Crashlytics Beta distribution uses ad-hoc provisioning
     gym(scheme: 'Hubbub', export_method: 'development')
@@ -21,20 +20,93 @@ platform :ios do
     emails = values[:test_email] ? values[:test_email] : ['judytuna@gmail.com'] # You can list more emails here
     groups = values[:test_email] ? nil : ['firebaes'] # You can define groups on the web and reference them here
 
-    crashlytics(api_token: '796081d516e581059e1a154f6bbbd4a3d8b9416a',
-             build_secret: '39ead38110a03d9426da50a27078ef63455b74ad3700d8664efaf589a685bd19',
-                   emails: emails,
-                   groups: groups,
-                    notes: 'Distributed with fastlane', # Check out the changelog_from_git_commits action
-            notifications: true) # Should this distribution notify your testers via email?
-
-    # for all available options run `fastlane action crashlytics`
+    crashlytics(
+      api_token: ENV["CRASHLYTICS_API_TOKEN"],
+      build_secret: ENV["CRASHLYTICS_BUILD_SECRET"],
+      emails: emails,
+      groups: groups,
+      notes: changelog_from_git_commits,
+      notifications: true
+    ) # for all available options run `fastlane action crashlytics`
 
     # You can notify your team in chat that a beta build has been uploaded
     slack(
       slack_url: ENV['SLACK_URL'],
       channel: "crashlytics",
       message: "Successfully uploaded a beta release - see it at https://fabric.io/_/beta"
+    )
+  end
+
+  desc "Deploy build on travis-ci"
+  lane :travis_deploy do |values|
+
+    # 1) Create a keychain
+
+    keychain_name = "certs"
+    create_keychain(
+      name: keychain_name,
+      default_keychain: false,
+      timeout: 3600,
+      password: SecureRandom.base64,
+      unlock: true
+    )
+
+    # 2) Import distribution certificate
+
+    # import_certificate(
+    #   certificate_path: "scripts/travis/certificate.p12",   #TODO JUDY: encrypt and add this certificate... to.... travis?
+    #   certificate_password: ENV["KEY_PASSWORD"],  #TODO JUDY: add this env variable
+    #   keychain_name: keychain_name
+    # )
+
+    cert(
+      development: true
+    )
+
+    # 3) Download provisioning profile
+
+    # sigh(
+    #   username: ENV["FASTLANE_USER"],
+    #   provisioning_name: "your_provisioning_profile_name",
+    #   team_id: ENV["TEAM_ID"], # BW42P47BVX
+    #   cert_id: ENV["CERT_ID"]  #ADD ENV VAR DRDS2H8YN4
+    # )
+    sigh(
+      development: true,
+      app_identifier: '*',
+      force: true # pick up any new devices
+    )
+
+    # 4) Increment the build number - in our case, we're using the travis-ci build number
+
+    increment_build_number(
+      build_number: ENV["CI_BUILD_ID"]
+    )
+
+    # 5) Build the app
+
+    gym(
+      clean: true,
+      scheme: "Hubbub",
+      export_method: "development",
+      # codesigning_identity: "iPhone Developer: Judy Tuan (BW42P47BVX)",
+      # xcargs: "PROVISIONING_PROFILE_SPECIFIER='Development_*.mobileprovision'"
+    )
+
+    # 6) Release to Crashlytics Beta
+
+    crashlytics(
+      api_token: ENV["CRASHLYTICS_API_TOKEN"],
+      build_secret: ENV["CRASHLYTICS_BUILD_SECRET"],
+      groups: 'firebaes', # yes, that's not a typo
+      notes: changelog_from_git_commits,
+      notifications: true
+    )
+
+    slack(
+      slack_url: ENV["SLACK_URL"],
+      channel: "crashlytics",
+      message: "Successfully uploaded beta release (build #{ENV['CI_BUILD_ID']}) - see it at https://fabric.io/_/beta"
     )
   end
 end
