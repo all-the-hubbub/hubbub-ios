@@ -7,4 +7,6 @@ script:
 - "./fastlane/travis.sh"
 before_install:
 - openssl aes-256-cbc -K $encrypted_9332fda33f27_key -iv $encrypted_9332fda33f27_iv
+  -in certificates/AppleWWDRCA.cer.enc -out certificates/AppleWWDRCA.cer -d
+- openssl aes-256-cbc -K $encrypted_9332fda33f27_key -iv $encrypted_9332fda33f27_iv
   -in certificates/dev.p12.enc -out certificates/dev.p12 -d
