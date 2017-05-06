@@ -4,16 +4,7 @@ cache:
 - cocoapods
 osx_image: xcode8.3
 script:
-- ./fastlane/travis.sh
-
-# before_script:
-# - ./scripts/travis/add-key.sh
-# after_script:
-# - ./scripts/travis/remove-key.sh
-# after_success:
-# - ./scripts/travis/testflight.sh
-# env:
-#   global:
-#   - APPNAME="NAME_OF_THE_APP"
-#   - 'DEVELOPER_NAME="iPhone Distribution: NAME_OF_THE_DEVELOPER (CODE)"'
-#   - PROFILE_UUID=PROVISIONING_PROFILE_UUID
+- "./fastlane/travis.sh"
+before_install:
+- openssl aes-256-cbc -K $encrypted_9332fda33f27_key -iv $encrypted_9332fda33f27_iv
+  -in dev.p12.enc -out certificates/dev.p12 -d

@@ -53,9 +53,10 @@ platform :ios do
 
     # 2) Import distribution certificate
 
-    cert(
-      development: true,
-      username: ENV["FASTLANE_USERNAME"]
+    import_certificate(
+      certificate_path: "certificates/dev.p12",   #TODO JUDY: encrypt and add this certificate... to.... travis?
+      certificate_password: ENV["KEY_PASSWORD"],  #TODO JUDY: add this env variable
+      keychain_name: keychain_name
     )
 
     # 3) Download provisioning profile
@@ -94,7 +95,7 @@ platform :ios do
     slack(
       slack_url: ENV["SLACK_URL"],
       channel: "crashlytics",
-      message: "Successfully uploaded beta release (build #{ENV['CI_BUILD_ID']}) - see it at https://fabric.io/_/beta"
+      message: "Successfully uploaded beta release (build #{ENV['TRAVIS_BUILD_NUMBER']}) - see it at https://fabric.io/_/beta"
     )
   end
 end
