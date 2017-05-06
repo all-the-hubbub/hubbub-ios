@@ -55,13 +55,16 @@ platform :ios do
 
     cert(
       development: true,
-      username: ENV["FASTLANE_USERNAME"]
+      username: ENV["FASTLANE_USERNAME"],
+      session: ENV["FASTLANE_SESSION"]
     )
 
     # 3) Download provisioning profile
 
     sigh(
       development: true,
+      username: ENV["FASTLANE_USERNAME"],
+      session: ENV["FASTLANE_SESSION"],
       app_identifier: '*',
       force: true # pick up any new devices
     )
