@@ -343,11 +343,13 @@
 					};
 					871818CA1E8AC81F00CF0B44 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 5EL2YAA4GG;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 871818B61E8AC81F00CF0B44;
 					};
 					871818D51E8AC81F00CF0B44 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 5EL2YAA4GG;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 871818B61E8AC81F00CF0B44;
 					};
@@ -661,6 +663,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5EL2YAA4GG;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -711,6 +714,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5EL2YAA4GG;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -739,7 +743,7 @@
 				DEVELOPMENT_TEAM = 5EL2YAA4GG;
 				INFOPLIST_FILE = Hubbub/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.all-the-hubbub.Hubbub";
+				PRODUCT_BUNDLE_IDENTIFIER = "live.hubbub.all-the-hubbub";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -751,11 +755,13 @@
 			baseConfigurationReference = 866B6F1EDAB1AA345225CC01 /* Pods-Hubbub.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5EL2YAA4GG;
 				INFOPLIST_FILE = Hubbub/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.all-the-hubbub.Hubbub";
+				PRODUCT_BUNDLE_IDENTIFIER = "live.hubbub.all-the-hubbub";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
