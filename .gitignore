@@ -70,3 +70,5 @@ vendor/
 *.p12
 *.mobileprovision
 *.cer
+
+*.DS_Store

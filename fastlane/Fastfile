@@ -69,7 +69,7 @@ platform :ios do
     sigh(
       development: true,
       username: ENV["FASTLANE_USERNAME"],
-      app_identifier: '*',
+      app_identifier: 'live.hubbub.all-the-hubbub',
       force: true # pick up any new devices
     )
 
