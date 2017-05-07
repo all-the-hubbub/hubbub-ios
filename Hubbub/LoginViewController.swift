@@ -62,7 +62,7 @@ class LoginViewController: UIViewController {
             make.right.equalToSuperview()
             make.top.equalTo(hero.snp.bottom).offset(10)
         }
-        
+
         // Tagline
         let tagline = UILabel()
         tagline.text = "Meet people with similar interests"
@@ -93,7 +93,7 @@ class LoginViewController: UIViewController {
             make.top.equalTo(tagline.snp.bottom).offset(40)
             make.bottom.equalToSuperview()
         }
-        
+
         // Privacy Policy
         let privacyPolicy = UIButton(type: .system)
         privacyPolicy.setTitle("Privacy Policy", for: .normal)
@@ -107,11 +107,11 @@ class LoginViewController: UIViewController {
             make.bottom.equalToSuperview().offset(-10)
         }
     }
-    
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-    
+
     // MARK: Internal
 
     internal func doLogin() {
@@ -121,10 +121,10 @@ class LoginViewController: UIViewController {
                 return
             }
             print("OAuth successful: access_token=\(accessToken!)")
-            
+
             // Fabric event tracking
             Answers.logLogin(withMethod: "Github", success: true, customAttributes: nil)
-            
+
             self.loginButton.isEnabled = false
             self.firebaseSignIn(accessToken: accessToken!)
         })
@@ -140,9 +140,9 @@ class LoginViewController: UIViewController {
             FIRDatabase.database().reference(withPath: "accounts/\(user!.uid)/githubToken").setValue(accessToken)
         }
     }
-    
+
     internal func showPrivacyPolicy() {
-        if let url = URL(string: "https://hubbub-159904.firebaseapp.com/assets/privacyPolicy.html") {
+        if let url = URL(string: "https://hubbub-159904.firebaseapp.com/privacy") {
             let vc = WebViewController(initialURL: url)
             vc.navigationItem.title = "Privacy Policy"
             present(vc, animated: true, completion: nil)
