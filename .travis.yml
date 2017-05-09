@@ -24,9 +24,15 @@ before_install:
 # - security find-certificate -c 'Apple Worldwide Developer Relations Certification Authority' /Library/Keychains/System.keychain
 #
 #
-# # Code signing identities
-# - security find-identity -v -p codesigning
+
 - popd
 
-- rvm install 2.4.1
-- rvm use 2.4.1
+- rvm current
+- rvm use 2.4.0
+- rvm current
+
+after_failure:
+# Code signing identities
+- security find-identity -v -p codesigning
+- which fastlane
+- rvm current
