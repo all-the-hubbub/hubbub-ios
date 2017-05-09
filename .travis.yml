@@ -31,8 +31,10 @@ before_install:
 - rvm use 2.3.0
 - rvm gemset create hubbub-ios
 - rvm use 2.3.0@hubbub-ios
+- gem install bundler
 - rvm current
 - echo $PATH
+- which bundle
 
 after_failure:
 - rvm current
