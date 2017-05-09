@@ -5,6 +5,5 @@
   ls -al certificates/
   security find-identity -v -p codesigning
   bundle exec fastlane travis_deploy
-  security find-identity -v -p codesigning
   exit $?
 # fi

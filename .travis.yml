@@ -1,16 +1,16 @@
 language: objective-c
-# cache:
-# - bundler
-# - cocoapods
+cache:
+- bundler
+- cocoapods
 osx_image: xcode8.3
 script:
 - "./fastlane/travis.sh"
 before_install:
 
-- pushd certificates
-- cp AppleWWDRCA.cer.upload AppleWWDRCA.cer
-- openssl aes-256-cbc -K $encrypted_b5511cfd17a8_key -iv $encrypted_b5511cfd17a8_iv
-  -in dev.p12.enc -out dev.p12 -d
+# - pushd certificates
+# - cp AppleWWDRCA.cer.upload AppleWWDRCA.cer
+# - openssl aes-256-cbc -K $encrypted_b5511cfd17a8_key -iv $encrypted_b5511cfd17a8_iv
+#   -in dev.p12.enc -out dev.p12 -d
 #
 # - set -v
 #
@@ -25,14 +25,14 @@ before_install:
 #
 #
 
-- popd
-
-- rvm list # 2.1.10, 2.2.5, 2.3.0
-- rvm use 2.3.0
-- gem install bundler
-
-after_failure:
-- rvm current
-# Code signing identities
-- security find-identity -v -p codesigning
-- which fastlane
+# - popd
+#
+# - rvm list # 2.1.10, 2.2.5, 2.3.0
+# - rvm use 2.3.0
+# - gem install bundler
+#
+# after_failure:
+# - rvm current
+# # Code signing identities
+# - security find-identity -v -p codesigning
+# - which fastlane
