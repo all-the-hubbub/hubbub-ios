@@ -27,16 +27,15 @@ before_install:
 
 - popd
 
+- rvm list # 2.1.10, 2.2.5, 2.3.0
+- rvm use 2.3.0
+- rvm gemset create hubbub-ios
+- rvm use 2.3.0@hubbub-ios
 - rvm current
-- rvm list
-- rvm install 2.4.0
-- rvm use 2.4.0
-- rvm current
-- rvm reload
-- rvm current
+- echo $PATH
 
 after_failure:
+- rvm current
 # Code signing identities
 - security find-identity -v -p codesigning
 - which fastlane
-- rvm current
