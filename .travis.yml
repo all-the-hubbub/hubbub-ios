@@ -32,9 +32,9 @@ before_install:
 - rvm gemset create hubbub-ios
 - rvm use 2.3.0@hubbub-ios
 - gem install bundler
-- rvm current
+- PATH=$PATH:/Users/travis/.rvm/gems/ruby-2.3.0@hubbub-ios/gems/fastlane-2.28.9/bin
 - echo $PATH
-- which bundle
+- which fastlane 
 
 after_failure:
 - rvm current
