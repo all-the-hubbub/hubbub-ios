@@ -27,3 +27,6 @@ before_install:
 # Code signing identities
 - security find-identity -v -p codesigning
 - popd
+
+- rvm install 2.4.1
+- rvm use 2.4.1
