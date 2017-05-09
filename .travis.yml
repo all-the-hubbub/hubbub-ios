@@ -28,8 +28,14 @@ before_install:
 - popd
 
 - rvm current
+- rvm list
+- rvm install 2.4.0
 - rvm use 2.4.0
 - rvm current
+- rvm reload
+- rvm current
+- which fastlane
+- fastlane --version
 
 after_failure:
 # Code signing identities
