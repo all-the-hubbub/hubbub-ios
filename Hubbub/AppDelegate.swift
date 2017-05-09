@@ -38,7 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Fabric.with([Crashlytics.self])
 
         // Initialize Firebase
-        FIRApp.configure()
+        let configPath = Bundle.main.path(forResource: Config.FirebasePlistName, ofType: "plist")
+        FIRApp.configure(with: FIROptions(contentsOfFile: configPath))
         FIRDatabase.setLoggingEnabled(true)
         initRemoteConfig()
 

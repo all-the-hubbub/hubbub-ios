@@ -17,11 +17,11 @@ protocol OAuthClient {
 }
 
 class GitHubOAuthClient: OAuthClient {
-    static let REDIRECT_URL = "https://hubbub-159904.firebaseapp.com/assets/oauth.html"
+    static let REDIRECT_URL = "https://\(Config.StaticHost)/assets/oauth.html"
     
     internal var oauth2 = OAuth2CodeGrant(settings: [
-        "client_id": "077cb2f4568e245a97eb",
-        "client_secret": "aa4b736a317532b47202cb7c9820bba587e64a70",
+        "client_id": Config.GitHubOAuthClientID,
+        "client_secret": Config.GitHubOAuthClientSecret,
         "authorize_uri": "https://github.com/login/oauth/authorize",
         "token_uri": "https://github.com/login/oauth/access_token",
         "scope": "",
