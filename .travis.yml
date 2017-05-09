@@ -16,7 +16,7 @@ before_install:
 
 # Login keychain
 - security list-keychains -d user
-- security find-certificate -c 'Apple Worldwide Developer Relations Certification Authority' /Users/vagrant/Library/Keychains/login.keychain
+- security find-certificate -c 'Apple Worldwide Developer Relations Certification Authority' /Users/travis/Library/Keychains/login.keychain
 
 
 # System keychain
