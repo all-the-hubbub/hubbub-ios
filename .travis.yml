@@ -34,8 +34,6 @@ before_install:
 - rvm current
 - rvm reload
 - rvm current
-- which fastlane
-- fastlane --version
 
 after_failure:
 # Code signing identities
