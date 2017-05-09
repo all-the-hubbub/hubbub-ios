@@ -6,33 +6,8 @@ osx_image: xcode8.3
 script:
 - "./fastlane/travis.sh"
 before_install:
-
-# - pushd certificates
-# - cp AppleWWDRCA.cer.upload AppleWWDRCA.cer
-# - openssl aes-256-cbc -K $encrypted_b5511cfd17a8_key -iv $encrypted_b5511cfd17a8_iv
-#   -in dev.p12.enc -out dev.p12 -d
-#
-# - set -v
-#
-# # Login keychain
-# - security list-keychains -d user
-# - security find-certificate -c 'Apple Worldwide Developer Relations Certification Authority' /Users/travis/Library/Keychains/login.keychain
-#
-#
-# # System keychain
-# - security list-keychains -d system
-# - security find-certificate -c 'Apple Worldwide Developer Relations Certification Authority' /Library/Keychains/System.keychain
-#
-#
-
-# - popd
-#
-# - rvm list # 2.1.10, 2.2.5, 2.3.0
-# - rvm use 2.3.0
-# - gem install bundler
-#
-# after_failure:
-# - rvm current
-# # Code signing identities
-# - security find-identity -v -p codesigning
-# - which fastlane
+- pushd certificates
+- cp AppleWWDRCA.cer.upload AppleWWDRCA.cer
+- openssl aes-256-cbc -K $encrypted_b5511cfd17a8_key -iv $encrypted_b5511cfd17a8_iv
+  -in dev.p12.enc -out dev.p12 -d
+- popd
