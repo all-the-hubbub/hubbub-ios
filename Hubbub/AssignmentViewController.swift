@@ -18,6 +18,12 @@ private let TopicSectionNumber = 0
 private let LocationSectionNumber = 1
 private let MembersSectionNumber = 2
 
+private let TopicHeaderReuseIdentifier = "TopicHeaderReuseIdentifier"
+private let LocationHeaderReuseIdentifier = "LocationHeaderReuseIdentifier"
+private let MembersHeaderReuseIdentifier = "MembersHeaderReuseIdentifier"
+private let MembersReuseIdentifier = "MembersReuseIdentifier"
+private let MembersFooterReuseIdentifier = "MembersFooterReuseIdentifier"
+
 class AssignmentViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FUIIndexArrayDelegate {
 
     // UI
@@ -28,14 +34,14 @@ class AssignmentViewController: UIViewController, UICollectionViewDataSource, UI
     
     // Properties
     var slot: Slot
-    var topic: Topic
+    var topic: Topic?
     var assignment: Assignment?
     var members = [Profile]()
     
     // Database
     var memberSnapshots: FUIIndexArray?
     
-    required init(slot: Slot, topic: Topic) {
+    required init(slot: Slot, topic: Topic?) {
         self.slot = slot
         self.topic = topic
         
@@ -85,8 +91,6 @@ class AssignmentViewController: UIViewController, UICollectionViewDataSource, UI
         collectionView!.backgroundColor = #colorLiteral(red: 0.9333333333, green: 0.9333333333, blue: 0.9333333333, alpha: 1)
         collectionView!.delegate = self
         collectionView!.dataSource = self
-        collectionView!.register(AssignmentMemberCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        collectionView!.register(AssignmentCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "header")
         view.addSubview(collectionView!)
         collectionView!.snp.makeConstraints { (make) in
             make.left.equalToSuperview()
@@ -95,20 +99,48 @@ class AssignmentViewController: UIViewController, UICollectionViewDataSource, UI
             make.bottom.equalToSuperview()
         }
         
-        // Beacon Button
-        beaconButton.setElevation(2, for: .normal)
-        beaconButton.setTitle("Find your group", for: .normal)
-        beaconButton.setBackgroundColor(ColorSecondary, for: .normal)
-        beaconButton.setTitleColor(.white, for: .normal)
-        beaconButton.sizeToFit()
-        beaconButton.addTarget(self, action: #selector(showBeacon), for: UIControlEvents.touchUpInside)
-        view.addSubview(beaconButton)
-        beaconButton.snp.makeConstraints { (make) in
-            make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-30)
-        }
+        // CollectionView Views
+        collectionView!.register(
+            AssignmentMemberCollectionViewCell.self,
+            forCellWithReuseIdentifier: MembersReuseIdentifier
+        )
+        collectionView!.register(
+            AssignmentTopicHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+            withReuseIdentifier: TopicHeaderReuseIdentifier
+        )
+        collectionView!.register(
+            AssignmentLocationHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+            withReuseIdentifier: LocationHeaderReuseIdentifier
+        )
+        collectionView!.register(
+            AssignmentMembersHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+            withReuseIdentifier: MembersHeaderReuseIdentifier
+        )
+        collectionView!.register(
+            AssignmentMembersFooterView.self,
+            forSupplementaryViewOfKind: UICollectionElementKindSectionFooter,
+            withReuseIdentifier: MembersFooterReuseIdentifier
+        )
         
-        fetchAssignment()
+        if topic != nil {
+            // Beacon Button
+            beaconButton.setElevation(2, for: .normal)
+            beaconButton.setTitle("Find your group", for: .normal)
+            beaconButton.setBackgroundColor(ColorSecondary, for: .normal)
+            beaconButton.setTitleColor(.white, for: .normal)
+            beaconButton.sizeToFit()
+            beaconButton.addTarget(self, action: #selector(showBeacon), for: UIControlEvents.touchUpInside)
+            view.addSubview(beaconButton)
+            beaconButton.snp.makeConstraints { (make) in
+                make.centerX.equalToSuperview()
+                make.bottom.equalToSuperview().offset(-30)
+            }
+            
+            fetchAssignment()
+        }
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -122,6 +154,8 @@ class AssignmentViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     internal func fetchAssignment() {
+        guard let topic = self.topic else { return }
+        
         let ref = FIRDatabase.database().reference(withPath: "assignments/\(slot.id)/\(topic.id)")
         ref.observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
             guard let strongSelf = self else { return }
@@ -134,6 +168,8 @@ class AssignmentViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     internal func fetchMembers(for assignment: Assignment) {
+        guard let topic = self.topic else { return }
+        
         memberSnapshots = FUIIndexArray(
             index: FIRDatabase.database().reference(withPath: "assignments/\(slot.id)/\(topic.id)/members"),
             data: FIRDatabase.database().reference(withPath: "profiles"),
@@ -142,6 +178,8 @@ class AssignmentViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     internal func showBeacon() {
+        guard let topic = self.topic else { return }
+        
         let beaconVC = BeaconViewController(slot: slot, topic: topic)
         present(beaconVC, animated: true, completion: nil)
     }
@@ -176,6 +214,13 @@ class AssignmentViewController: UIViewController, UICollectionViewDataSource, UI
         return CGSize(width: collectionView.frame.size.width, height: 40)
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        if topic == nil && section == MembersSectionNumber {
+            return CGSize(width: collectionView.frame.size.width, height: 80)
+        }
+        return .zero
+    }
+    
     // MARK: UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -190,7 +235,7 @@ class AssignmentViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MembersReuseIdentifier, for: indexPath)
         guard let memberCell = cell as? AssignmentMemberCollectionViewCell else {
             return cell
         }
@@ -201,38 +246,48 @@ class AssignmentViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
-        guard let assignmentHeader = view as? AssignmentCollectionViewHeader else {
-            return view
-        }
+        var view: UICollectionReusableView?
         
-        var icon: UIImage?
-        var topic: Topic?
-        var title: String?
-        
-        switch indexPath.section {
-        case TopicSectionNumber:
-            icon = #imageLiteral(resourceName: "ic_subject")
-            topic = self.topic
-        case LocationSectionNumber:
-            icon = #imageLiteral(resourceName: "ic_location_on")
-            title = slot.location
-        case MembersSectionNumber:
-            icon = #imageLiteral(resourceName: "ic_people")
-            if members.count == 0 {
-                title = "Loading..."
-            } else if members.count == 1 {
-                title = "1 guest"
-            } else {
-                title = "\(members.count) guests"
+        switch kind {
+        case UICollectionElementKindSectionHeader:
+            switch indexPath.section {
+            case TopicSectionNumber:
+                view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TopicHeaderReuseIdentifier, for: indexPath)
+                if let topicHeaderView = view as? AssignmentTopicHeaderView {
+                    topicHeaderView.topic = self.topic
+                }
+            case LocationSectionNumber:
+                view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: LocationHeaderReuseIdentifier, for: indexPath)
+                if let locationHeaderView = view as? AssignmentLocationHeaderView {
+                    locationHeaderView.title = slot.location
+                }
+            case MembersSectionNumber:
+                view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: MembersHeaderReuseIdentifier, for: indexPath)
+                if let membersHeaderView = view as? AssignmentMembersHeaderView {
+                    if topic == nil {
+                        membersHeaderView.title = "Guests"
+                    } else if members.count == 0 {
+                        membersHeaderView.title = "Loading..."
+                    } else if members.count == 1 {
+                        membersHeaderView.title = "1 guest"
+                    } else {
+                        membersHeaderView.title = "\(members.count) guests"
+                    }
+                }
+            default:
+                break
             }
-        default: break
+        case UICollectionElementKindSectionFooter:
+            switch indexPath.section {
+            case MembersSectionNumber:
+                view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: MembersFooterReuseIdentifier, for: indexPath)
+            default:
+                break
+            }
+        default:
+            break
         }
         
-        assignmentHeader.icon = icon?.withRenderingMode(.alwaysTemplate)
-        assignmentHeader.topic = topic
-        assignmentHeader.title = title
-        
-        return assignmentHeader
+        return view ?? UICollectionReusableView()
     }
 }
