@@ -34,7 +34,12 @@ xcode-select --install
 ```
 fastlane ios beta
 ```
-
+Deploy new build to Crashlytics Beta and notify our testers
+### ios travis_deploy
+```
+fastlane ios travis_deploy
+```
+Deploy build on travis-ci
 
 ----
 
