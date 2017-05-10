@@ -17,6 +17,7 @@ target 'Hubbub' do
   pod 'MaterialComponents/Buttons'
   pod 'MaterialComponents/Palettes'
   pod 'MaterialComponents/ShadowLayer'
+  pod 'MaterialComponents/Snackbar'
   pod 'p2.OAuth2', '~> 3.0'
   pod 'SnapKit', '~> 3.0'
 

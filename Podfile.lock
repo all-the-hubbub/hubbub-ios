@@ -48,6 +48,7 @@ PODS:
     - GoogleToolboxForMac/NSString+URLArguments (= 2.1.1)
   - GoogleToolboxForMac/NSString+URLArguments (2.1.1)
   - GTMSessionFetcher/Core (1.1.9)
+  - MaterialComponents/AnimationTiming (23.0.1)
   - MaterialComponents/AppBar (23.0.1):
     - MaterialComponents/FlexibleHeader
     - MaterialComponents/HeaderStackView
@@ -76,14 +77,27 @@ PODS:
     - MaterialComponents/private/RTL
     - MaterialComponents/Typography
     - MDFTextAccessibility
+  - MaterialComponents/OverlayWindow (23.0.1):
+    - MaterialComponents/private/Application
   - MaterialComponents/Palettes (23.0.1)
   - MaterialComponents/private/Application (23.0.1)
   - MaterialComponents/private/Icons/Base (23.0.1)
   - MaterialComponents/private/Icons/ic_arrow_back (23.0.1):
     - MaterialComponents/private/Icons/Base
+  - MaterialComponents/private/KeyboardWatcher (23.0.1):
+    - MaterialComponents/private/Application
+  - MaterialComponents/private/Overlay (23.0.1)
   - MaterialComponents/private/RTL (23.0.1)
   - MaterialComponents/ShadowElevations (23.0.1)
   - MaterialComponents/ShadowLayer (23.0.1)
+  - MaterialComponents/Snackbar (23.0.1):
+    - MaterialComponents/AnimationTiming
+    - MaterialComponents/Buttons
+    - MaterialComponents/OverlayWindow
+    - MaterialComponents/private/Application
+    - MaterialComponents/private/KeyboardWatcher
+    - MaterialComponents/private/Overlay
+    - MaterialComponents/Typography
   - MaterialComponents/Typography (23.0.1):
     - MaterialComponents/private/Application
   - MDFTextAccessibility (1.2.0)
@@ -105,6 +119,7 @@ DEPENDENCIES:
   - MaterialComponents/Buttons
   - MaterialComponents/Palettes
   - MaterialComponents/ShadowLayer
+  - MaterialComponents/Snackbar
   - p2.OAuth2 (~> 3.0)
   - SnapKit (~> 3.0)
 
@@ -129,6 +144,6 @@ SPEC CHECKSUMS:
   Protobuf: 2ccbaf193f6c65adc67745453ca0c13234c32796
   SnapKit: 1ca44df72cfa543218d177cb8aab029d10d86ea7
 
-PODFILE CHECKSUM: c0a3cd94e6e84197892b08586d74d4238c5cf53f
+PODFILE CHECKSUM: 713f984222823d0ec779dd5914efa5d8909f8186
 
 COCOAPODS: 1.2.1
