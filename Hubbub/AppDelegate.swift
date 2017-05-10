@@ -11,21 +11,19 @@ import Fabric
 import Firebase
 import UIKit
 
-
 // Remote Config
 private let RemoteConfigRequiredBuildKey = "ios_required_build"
-
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     let rootViewController = UINavigationController()
-    
+
     var user: FIRUser?
     var remoteConfig: FIRRemoteConfig?
     let oauthClient = GitHubOAuthClient()
-    
+
     lazy var appBuildNumber: Int = {
         var n = Int.max
         if let versionStr = Bundle.main.infoDictionary?["CFBundleVersion"] as? String, let version = Int(versionStr) {
@@ -42,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return nil
     }()
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Initialize Fabric
         Fabric.sharedSDK().debug = true
         Fabric.with([Crashlytics.self])
@@ -65,23 +63,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+    func application(_: UIApplication, open url: URL, sourceApplication _: String?, annotation _: Any) -> Bool {
         if url.scheme == "hubbub" {
-            self.oauthClient.handleRedirectURL(url)
+            oauthClient.handleRedirectURL(url)
             return true
         }
         return false
     }
-    
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        remoteConfig?.fetch(withExpirationDuration: TimeInterval(60*60)) { [unowned self] (status, err) in
+
+    func applicationDidBecomeActive(_: UIApplication) {
+        remoteConfig?.fetch(withExpirationDuration: TimeInterval(60 * 60)) { [unowned self] status, _ in
             guard let config = self.remoteConfig else { return }
-            
+
             // Apply new remote values
             if status == .success {
                 config.activateFetched()
             }
-            
+
             // Check for forced upgrade
             if let requiredBuild = config[RemoteConfigRequiredBuildKey].numberValue?.intValue {
                 if requiredBuild > self.appBuildNumber {
@@ -100,22 +98,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func initRemoteConfig() {
         remoteConfig = FIRRemoteConfig.remoteConfig()
         remoteConfig?.setDefaults([
-            RemoteConfigRequiredBuildKey: appBuildNumber as NSObject
+            RemoteConfigRequiredBuildKey: appBuildNumber as NSObject,
         ])
     }
 
     func initAuth() {
-        FIRAuth.auth()?.addStateDidChangeListener({ [unowned self] (auth, user) in
+        FIRAuth.auth()?.addStateDidChangeListener({ [unowned self] _, user in
             // If nothing has changed since the last invocation, return early.
             // This prevents ViewController thrashing in scenarios like a new access token being minted.
-            if (user != nil && user!.uid == self.user?.uid) {
+            if user != nil && user!.uid == self.user?.uid {
                 return
             }
             self.user = user
 
             // If not logged in, show the login screen. Otherwise show the home screen.
-            var vc:UIViewController
-            if (self.user == nil) {
+            var vc: UIViewController
+            if self.user == nil {
                 vc = LoginViewController(oauthClient: self.oauthClient)
             } else {
                 vc = HomeViewController(user: self.user!, oauthClient: self.oauthClient)
@@ -130,14 +128,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             message: "Please download the latest version of Hubbub",
             preferredStyle: .alert
         )
-        
-        let action = UIAlertAction(title: "Open App Store", style: .default) { (action) in
+
+        let action = UIAlertAction(title: "Open App Store", style: .default) { _ in
             if let url = URL(string: "https://itunes.apple.com/app/\(Config.AppStoreID)") {
                 UIApplication.shared.open(url)
             }
         }
         alert.addAction(action)
-        
+
         rootViewController.present(alert, animated: true, completion: nil)
     }
 }

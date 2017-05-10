@@ -12,21 +12,20 @@ import SnapKit
 import UIKit
 import Crashlytics
 
-
 class LoginViewController: UIViewController {
 
     // UI
-    var loginButton:MDCRaisedButton!
+    var loginButton: MDCRaisedButton!
 
     // Internal Properties
-    internal var oauthClient:OAuthClient
+    internal var oauthClient: OAuthClient
 
-    required init(oauthClient:OAuthClient) {
+    required init(oauthClient: OAuthClient) {
         self.oauthClient = oauthClient
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -36,7 +35,7 @@ class LoginViewController: UIViewController {
 
         let container = UIView()
         view.addSubview(container)
-        container.snp.makeConstraints { (make) in
+        container.snp.makeConstraints { make in
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.centerY.equalToSuperview().offset(-20)
@@ -45,7 +44,7 @@ class LoginViewController: UIViewController {
         // Hero Icon
         let hero = UIImageView(image: #imageLiteral(resourceName: "hubbub-hero"))
         container.addSubview(hero)
-        hero.snp.makeConstraints { (make) in
+        hero.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview()
         }
@@ -57,7 +56,7 @@ class LoginViewController: UIViewController {
         title.textColor = .white
         title.font = UIFont.systemFont(ofSize: 32)
         container.addSubview(title)
-        title.snp.makeConstraints { (make) in
+        title.snp.makeConstraints { make in
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.top.equalTo(hero.snp.bottom).offset(10)
@@ -71,7 +70,7 @@ class LoginViewController: UIViewController {
         tagline.alpha = 0.54
         tagline.font = UIFont.systemFont(ofSize: 16)
         container.addSubview(tagline)
-        tagline.snp.makeConstraints { (make) in
+        tagline.snp.makeConstraints { make in
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.top.equalTo(title.snp.bottom).offset(5)
@@ -102,7 +101,7 @@ class LoginViewController: UIViewController {
         privacyPolicy.alpha = 0.5
         privacyPolicy.addTarget(self, action: #selector(showPrivacyPolicy), for: .touchUpInside)
         view.addSubview(privacyPolicy)
-        privacyPolicy.snp.makeConstraints { (make) in
+        privacyPolicy.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().offset(-10)
         }
@@ -115,8 +114,8 @@ class LoginViewController: UIViewController {
     // MARK: Internal
 
     internal func doLogin() {
-        oauthClient.authorize(from: self, callback: { [unowned self] (accessToken, error) in
-            if (error != nil) {
+        oauthClient.authorize(from: self, callback: { [unowned self] accessToken, error in
+            if error != nil {
                 print("OAuth was cancelled or failed: \(error)")
                 return
             }
@@ -132,8 +131,8 @@ class LoginViewController: UIViewController {
 
     internal func firebaseSignIn(accessToken: String) {
         let credential = FIRGitHubAuthProvider.credential(withToken: accessToken)
-        FIRAuth.auth()?.signIn(with: credential) { (user, error) in
-            if (error != nil) {
+        FIRAuth.auth()?.signIn(with: credential) { user, error in
+            if error != nil {
                 print("Firebase Auth error: \(error)")
                 return
             }

@@ -10,15 +10,15 @@ import p2_OAuth2
 import Foundation
 
 protocol OAuthClient {
-    var accessToken:String? { get }
-    
+    var accessToken: String? { get }
+
     func authorize(from context: AnyObject, callback: @escaping ((_ accessToken: String?, _ error: Error?) -> Void))
     func handleRedirectURL(_ redirect: URL)
 }
 
 class GitHubOAuthClient: OAuthClient {
     static let REDIRECT_URL = "https://\(Config.StaticHost)/assets/oauth.html"
-    
+
     internal var oauth2 = OAuth2CodeGrant(settings: [
         "client_id": Config.GitHubOAuthClientID,
         "client_secret": Config.GitHubOAuthClientSecret,
@@ -30,21 +30,21 @@ class GitHubOAuthClient: OAuthClient {
         "verbose": true,
         "keychain": false,
     ] as OAuth2JSON)
-    
+
     func authorize(from context: AnyObject, callback: @escaping ((_ accessToken: String?, _ error: Error?) -> Void)) {
-        oauth2.authorizeEmbedded(from: context) { [unowned self] (authParams, error) in
+        oauth2.authorizeEmbedded(from: context) { [unowned self] _, error in
             // Break retain cycle
             self.oauth2.authConfig.authorizeContext = nil
-            
-            if (error != nil) {
+
+            if error != nil {
                 callback(nil, error)
                 return
             }
-            
+
             callback(self.oauth2.accessToken, nil)
         }
     }
-    
+
     func handleRedirectURL(_ redirect: URL) {
         // The OAuth2 library has a strange requirement that the URL passed to handleRedirectURL() have the same base
         // as the URL specified in "redirect_uris" setting. In our case they're different, so we need to trick the library
@@ -53,7 +53,7 @@ class GitHubOAuthClient: OAuthClient {
             oauth2.handleRedirectURL(redirectURL)
         }
     }
-    
+
     var accessToken: String? {
         return oauth2.accessToken
     }

@@ -8,6 +8,5 @@
 
 import MaterialComponents.MaterialPalettes
 
-
 let ColorPrimary = MDCPalette.indigo().tint400
 let ColorSecondary = MDCPalette.cyan().accent700

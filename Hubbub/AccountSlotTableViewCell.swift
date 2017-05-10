@@ -9,7 +9,7 @@
 import UIKit
 
 class AccountSlotTableViewCell: SlotTableViewCell {
-    
+
     // UI
     let topicPill = TopicPill()
     let pendingLabel: UILabel = {
@@ -20,7 +20,7 @@ class AccountSlotTableViewCell: SlotTableViewCell {
         l.sizeToFit()
         return l
     }()
-    
+
     // Properties
     override var slot: Slot? {
         get {
@@ -28,13 +28,13 @@ class AccountSlotTableViewCell: SlotTableViewCell {
         }
         set {
             super.slot = newValue
-            
+
             if let topic = slot?.topic {
                 topicPill.text = topic.name
                 topicPill.sizeToFit()
-                self.accessoryView = topicPill
+                accessoryView = topicPill
             } else {
-                self.accessoryView = pendingLabel
+                accessoryView = pendingLabel
             }
         }
     }
