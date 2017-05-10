@@ -20,9 +20,19 @@ private let RemoteConfigRequiredBuildKey = "ios_required_build"
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var user: FIRUser?
-    let oauthClient = GitHubOAuthClient()
     let rootViewController = UINavigationController()
+    
+    var user: FIRUser?
+    var remoteConfig: FIRRemoteConfig?
+    let oauthClient = GitHubOAuthClient()
+    
+    lazy var appBuildNumber: Int = {
+        var n = Int.max
+        if let versionStr = Bundle.main.infoDictionary?["CFBundleVersion"] as? String, let version = Int(versionStr) {
+            n = version
+        }
+        return n
+    }()
 
     lazy var appVersionString: String? = {
         guard let info = Bundle.main.infoDictionary else { return nil }
@@ -62,6 +72,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         return false
     }
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        remoteConfig?.fetch(withExpirationDuration: TimeInterval(60*60)) { [unowned self] (status, err) in
+            guard let config = self.remoteConfig else { return }
+            
+            // Apply new remote values
+            if status == .success {
+                config.activateFetched()
+            }
+            
+            // Check for forced upgrade
+            if let requiredBuild = config[RemoteConfigRequiredBuildKey].numberValue?.intValue {
+                if requiredBuild > self.appBuildNumber {
+                    print("Requiring upgrade: current=\(self.appBuildNumber) required=\(requiredBuild)")
+                    self.showUpgradeDialog()
+                }
+            }
+        }
+    }
 
     func initDatabase() {
         FIRDatabase.setLoggingEnabled(true)
@@ -69,33 +98,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func initRemoteConfig() {
-        let config = FIRRemoteConfig.remoteConfig()
-        var defaults = [String : NSObject]()
-
-        // Required build version:
-        // By setting currentBuild to Int.max we avoid always showing an upgrade dialog if unable to parse the build number
-        var currentBuild = Int.max
-        if let versionStr = Bundle.main.infoDictionary?["CFBundleVersion"] as? String, let version = Int(versionStr) {
-            currentBuild = version
-        }
-        defaults[RemoteConfigRequiredBuildKey] = currentBuild as NSObject
-
-        // Apply defaults and fetch new values
-        config.setDefaults(defaults)
-        config.fetch(withExpirationDuration: TimeInterval(60*60)) { [unowned self] (status, err) in
-            // Apply new remote values
-            if status == .success {
-                config.activateFetched()
-            }
-
-            // Check for forced upgrade
-            if let requiredBuild = config[RemoteConfigRequiredBuildKey].numberValue?.intValue {
-                if requiredBuild > currentBuild {
-                    print("Requiring upgrade: current=\(currentBuild) required=\(requiredBuild)")
-                    self.showUpgradeDialog()
-                }
-            }
-        }
+        remoteConfig = FIRRemoteConfig.remoteConfig()
+        remoteConfig?.setDefaults([
+            RemoteConfigRequiredBuildKey: appBuildNumber as NSObject
+        ])
     }
 
     func initAuth() {
@@ -121,9 +127,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func showUpgradeDialog() {
         let alert = UIAlertController(
             title: "Upgrade Required",
-            message: "Please download the latest version of Hubbub from the App Store",
+            message: "Please download the latest version of Hubbub",
             preferredStyle: .alert
         )
+        
+        let action = UIAlertAction(title: "Open App Store", style: .default) { (action) in
+            if let url = URL(string: "https://itunes.apple.com/app/\(Config.AppStoreID)") {
+                UIApplication.shared.open(url)
+            }
+        }
+        alert.addAction(action)
+        
         rootViewController.present(alert, animated: true, completion: nil)
     }
 }

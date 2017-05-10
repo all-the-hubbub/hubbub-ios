@@ -9,6 +9,9 @@
 import Foundation
 
 struct Config {
+    // Always the real id so the upgrade dialog can properly open the App Store
+    static let AppStoreID = "id1234046078"
+    
     static let FirebasePlistName = env(
         dev: "GoogleService-Info-Dev",
         prod: "GoogleService-Info"
