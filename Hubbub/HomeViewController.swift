@@ -145,7 +145,6 @@ class HomeViewController: UIViewController, UITableViewDelegate {
             let cell = tableView.dequeueReusableCell(withIdentifier: "slotsCell", for: indexPath)
             if let slot = Slot(snapshot: snapshot) {
                 (cell as! AccountSlotTableViewCell).slot = slot
-                cell.isUserInteractionEnabled = (slot.topic != nil)
             }
             return cell
         })
@@ -175,8 +174,8 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let snapshot = slotsDatasource?.snapshot(at: indexPath.row), let slot = Slot(snapshot: snapshot), let topic = slot.topic {
-            let assignmentVC = AssignmentViewController(slot: slot, topic: topic)
+        if let snapshot = slotsDatasource?.snapshot(at: indexPath.row), let slot = Slot(snapshot: snapshot) {
+            let assignmentVC = AssignmentViewController(slot: slot, topic: slot.topic)
             navigationController?.pushViewController(assignmentVC, animated: true)
         }
     }
