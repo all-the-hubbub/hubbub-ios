@@ -6,10 +6,10 @@
 //  Copyright © 2017 All The Hubbub. All rights reserved.
 //
 
+import Crashlytics
+import Fabric
 import Firebase
 import UIKit
-import Fabric
-import Crashlytics
 
 
 // Remote Config
@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var user: FIRUser?
     let oauthClient = GitHubOAuthClient()
     let rootViewController = UINavigationController()
-    
+
     lazy var appVersionString: String? = {
         guard let info = Bundle.main.infoDictionary else { return nil }
         if let version = info["CFBundleShortVersionString"] as? String, let build = info["CFBundleVersion"] as? String {
@@ -40,34 +40,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Initialize Firebase
         let configPath = Bundle.main.path(forResource: Config.FirebasePlistName, ofType: "plist")
         FIRApp.configure(with: FIROptions(contentsOfFile: configPath))
-        FIRDatabase.setLoggingEnabled(true)
+        initDatabase()
+        initAuth()
         initRemoteConfig()
-
-        // Firebase Auth
-        FIRAuth.auth()?.addStateDidChangeListener({ [unowned self] (auth, user) in
-            // If nothing has changed since the last invocation, return early.
-            // This prevents ViewController thrashing in scenarios like a new access token being minted.
-            if (user != nil && user!.uid == self.user?.uid) {
-                return
-            }
-            self.user = user
-        
-            // If not logged in, show the login screen. Otherwise show the home screen.
-            var vc:UIViewController
-            if (self.user == nil) {
-                vc = LoginViewController(oauthClient: self.oauthClient)
-            } else {
-                vc = HomeViewController(user: self.user!, oauthClient: self.oauthClient)
-            }
-            self.rootViewController.setViewControllers([vc], animated: false)
-        })
 
         // Storyboard has no entry point, so create a Window ourselves
         window = UIWindow.init(frame: UIScreen.main.bounds)
         window!.backgroundColor = UIColor.white
         window!.rootViewController = rootViewController
         rootViewController.setNavigationBarHidden(true, animated: false)
-        
+
         // Ready to launch
         window!.makeKeyAndVisible()
         return true
@@ -80,11 +62,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         return false
     }
-    
+
+    func initDatabase() {
+        FIRDatabase.setLoggingEnabled(true)
+        FIRDatabase.database().persistenceEnabled = true
+    }
+
     func initRemoteConfig() {
         let config = FIRRemoteConfig.remoteConfig()
         var defaults = [String : NSObject]()
-        
+
         // Required build version:
         // By setting currentBuild to Int.max we avoid always showing an upgrade dialog if unable to parse the build number
         var currentBuild = Int.max
@@ -92,7 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             currentBuild = version
         }
         defaults[RemoteConfigRequiredBuildKey] = currentBuild as NSObject
-        
+
         // Apply defaults and fetch new values
         config.setDefaults(defaults)
         config.fetch(withExpirationDuration: TimeInterval(60*60)) { [unowned self] (status, err) in
@@ -100,7 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if status == .success {
                 config.activateFetched()
             }
-            
+
             // Check for forced upgrade
             if let requiredBuild = config[RemoteConfigRequiredBuildKey].numberValue?.intValue {
                 if requiredBuild > currentBuild {
@@ -110,7 +97,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-    
+
+    func initAuth() {
+        FIRAuth.auth()?.addStateDidChangeListener({ [unowned self] (auth, user) in
+            // If nothing has changed since the last invocation, return early.
+            // This prevents ViewController thrashing in scenarios like a new access token being minted.
+            if (user != nil && user!.uid == self.user?.uid) {
+                return
+            }
+            self.user = user
+
+            // If not logged in, show the login screen. Otherwise show the home screen.
+            var vc:UIViewController
+            if (self.user == nil) {
+                vc = LoginViewController(oauthClient: self.oauthClient)
+            } else {
+                vc = HomeViewController(user: self.user!, oauthClient: self.oauthClient)
+            }
+            self.rootViewController.setViewControllers([vc], animated: false)
+        })
+    }
+
     func showUpgradeDialog() {
         let alert = UIAlertController(
             title: "Upgrade Required",
