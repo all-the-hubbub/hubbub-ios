@@ -58,7 +58,7 @@ class BeaconViewController: WebViewController, WKNavigationDelegate {
     internal func beaconURL() -> URL? {
         let urlComponents = NSURLComponents()
         urlComponents.scheme = "https"
-        urlComponents.host = "hubbub-159904.firebaseapp.com"
+        urlComponents.host = Config.StaticHost
         urlComponents.path = "/assets/beacon.html"
         urlComponents.queryItems = [
             URLQueryItem(name: "slotId", value: slot.id),

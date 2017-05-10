@@ -24,6 +24,9 @@
 		875D85611EA6B70A00DEAE5A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 875D85601EA6B70A00DEAE5A /* HomeViewController.swift */; };
 		8761393A1EB7D45000A2412D /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876139391EB7D45000A2412D /* Style.swift */; };
 		8761393C1EB7EFBF00A2412D /* HomeSlotsTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8761393B1EB7EFBF00A2412D /* HomeSlotsTableHeaderView.swift */; };
+		8763DE881EC13D3B0044E95F /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8763DE871EC13D3B0044E95F /* Config.swift */; };
+		8763DE8A1EC239F40044E95F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8763DE891EC239F40044E95F /* GoogleService-Info.plist */; };
+		8763DE8C1EC23ACF0044E95F /* GoogleService-Info-Dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8763DE8B1EC23ACF0044E95F /* GoogleService-Info-Dev.plist */; };
 		876508A01EB66D9A00AE6674 /* SlotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8765089F1EB66D9A00AE6674 /* SlotTableViewCell.swift */; };
 		876508A21EB68D2400AE6674 /* SlotsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876508A11EB68D2400AE6674 /* SlotsViewController.swift */; };
 		876508A41EB6E7C400AE6674 /* ToggleSlotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876508A31EB6E7C400AE6674 /* ToggleSlotTableViewCell.swift */; };
@@ -31,9 +34,6 @@
 		876508AA1EB6F9E400AE6674 /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876508A91EB6F9E400AE6674 /* Topic.swift */; };
 		87681EC21EBBA1900005A1B8 /* AssignmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87681EC11EBBA1900005A1B8 /* AssignmentViewController.swift */; };
 		876B48181E8D5425006C8005 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876B48171E8D5425006C8005 /* LoginViewController.swift */; };
-		87A177E71E8ACA9000D61E2E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 87A177E61E8ACA9000D61E2E /* GoogleService-Info.plist */; };
-		87A177E81E8ACA9000D61E2E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 87A177E61E8ACA9000D61E2E /* GoogleService-Info.plist */; };
-		87A177E91E8ACA9000D61E2E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 87A177E61E8ACA9000D61E2E /* GoogleService-Info.plist */; };
 		87D9E1DF1EBA7F35006955E4 /* HomeSlotsTableFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D9E1DE1EBA7F35006955E4 /* HomeSlotsTableFooterView.swift */; };
 		87DD0B7B1EB3F7240037A1E0 /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DD0B7A1EB3F7240037A1E0 /* HomeHeaderView.swift */; };
 		87DD0B7E1EB3F74E0037A1E0 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DD0B7D1EB3F74E0037A1E0 /* Profile.swift */; };
@@ -89,6 +89,9 @@
 		875D85601EA6B70A00DEAE5A /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		876139391EB7D45000A2412D /* Style.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		8761393B1EB7EFBF00A2412D /* HomeSlotsTableHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSlotsTableHeaderView.swift; sourceTree = "<group>"; };
+		8763DE871EC13D3B0044E95F /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		8763DE891EC239F40044E95F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		8763DE8B1EC23ACF0044E95F /* GoogleService-Info-Dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-Dev.plist"; sourceTree = "<group>"; };
 		8765089F1EB66D9A00AE6674 /* SlotTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlotTableViewCell.swift; sourceTree = "<group>"; };
 		876508A11EB68D2400AE6674 /* SlotsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlotsViewController.swift; sourceTree = "<group>"; };
 		876508A31EB6E7C400AE6674 /* ToggleSlotTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToggleSlotTableViewCell.swift; sourceTree = "<group>"; };
@@ -96,7 +99,6 @@
 		876508A91EB6F9E400AE6674 /* Topic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Topic.swift; sourceTree = "<group>"; };
 		87681EC11EBBA1900005A1B8 /* AssignmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssignmentViewController.swift; sourceTree = "<group>"; };
 		876B48171E8D5425006C8005 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		87A177E61E8ACA9000D61E2E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		87D9E1DE1EBA7F35006955E4 /* HomeSlotsTableFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSlotsTableFooterView.swift; sourceTree = "<group>"; };
 		87DD0B7A1EB3F7240037A1E0 /* HomeHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
 		87DD0B7D1EB3F74E0037A1E0 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
@@ -190,12 +192,14 @@
 				87F1B8471EAFF7E100AE5535 /* ViewControllers */,
 				87DD0B7C1EB3F72B0037A1E0 /* Views */,
 				871818BA1E8AC81F00CF0B44 /* AppDelegate.swift */,
+				8763DE871EC13D3B0044E95F /* Config.swift */,
 				87FD3DD61EA82FEC00B1D8E3 /* OAuth.swift */,
 				876139391EB7D45000A2412D /* Style.swift */,
 				871818BE1E8AC81F00CF0B44 /* Main.storyboard */,
 				871818C31E8AC81F00CF0B44 /* LaunchScreen.storyboard */,
 				871818C61E8AC81F00CF0B44 /* Info.plist */,
-				87A177E61E8ACA9000D61E2E /* GoogleService-Info.plist */,
+				8763DE891EC239F40044E95F /* GoogleService-Info.plist */,
+				8763DE8B1EC23ACF0044E95F /* GoogleService-Info-Dev.plist */,
 			);
 			path = Hubbub;
 			sourceTree = "<group>";
@@ -380,8 +384,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8763DE8C1EC23ACF0044E95F /* GoogleService-Info-Dev.plist in Resources */,
 				871818C51E8AC81F00CF0B44 /* LaunchScreen.storyboard in Resources */,
-				87A177E71E8ACA9000D61E2E /* GoogleService-Info.plist in Resources */,
+				8763DE8A1EC239F40044E95F /* GoogleService-Info.plist in Resources */,
 				871818C21E8AC81F00CF0B44 /* Assets.xcassets in Resources */,
 				871818C01E8AC81F00CF0B44 /* Main.storyboard in Resources */,
 			);
@@ -391,7 +396,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				87A177E81E8ACA9000D61E2E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,7 +403,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				87A177E91E8ACA9000D61E2E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -573,6 +576,7 @@
 				871818BB1E8AC81F00CF0B44 /* AppDelegate.swift in Sources */,
 				8761393A1EB7D45000A2412D /* Style.swift in Sources */,
 				87064EEE1EBBD8E300A1A197 /* Assignment.swift in Sources */,
+				8763DE881EC13D3B0044E95F /* Config.swift in Sources */,
 				8761393C1EB7EFBF00A2412D /* HomeSlotsTableHeaderView.swift in Sources */,
 				875D85611EA6B70A00DEAE5A /* HomeViewController.swift in Sources */,
 				87064EF21EBBF70C00A1A197 /* AssignmentHeaderView.swift in Sources */,
@@ -683,6 +687,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-DENV_DEV";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -727,6 +732,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_SWIFT_FLAGS = "-DENV_PROD";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -738,12 +744,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D2DE68E23402674767E52B46 /* Pods-Hubbub.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-dev";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5EL2YAA4GG;
 				INFOPLIST_FILE = Hubbub/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "live.hubbub.all-the-hubbub";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.all-the-hubbub.Hubbub";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;

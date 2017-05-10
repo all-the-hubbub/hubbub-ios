@@ -142,7 +142,7 @@ class LoginViewController: UIViewController {
     }
 
     internal func showPrivacyPolicy() {
-        if let url = URL(string: "https://hubbub-159904.firebaseapp.com/privacy") {
+        if let url = URL(string: "https://\(Config.StaticHost)/privacy") {
             let vc = WebViewController(initialURL: url)
             vc.navigationItem.title = "Privacy Policy"
             present(vc, animated: true, completion: nil)

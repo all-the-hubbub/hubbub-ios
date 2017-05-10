@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>113654972557-m8k1q3e9v9mph8a3nt87fk7i8f1fpcgd.apps.googleusercontent.com</string>
+	<string>855593303793-rp13s2rrqaalbnit542bi2svlt3d9b4t.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.113654972557-m8k1q3e9v9mph8a3nt87fk7i8f1fpcgd</string>
+	<string>com.googleusercontent.apps.855593303793-rp13s2rrqaalbnit542bi2svlt3d9b4t</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCoj-TQ2NR7Y7mh5tPb6e81JTscVuhBtJQ</string>
+	<string>AIzaSyAoNDBN5Uw70jq-MSSfbVg6V6lMhJf0o_E</string>
 	<key>GCM_SENDER_ID</key>
-	<string>113654972557</string>
+	<string>855593303793</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>live.hubbub.all-the-hubbub</string>
+	<string>com.all-the-hubbub.Hubbub</string>
 	<key>PROJECT_ID</key>
-	<string>hubbub-159904</string>
+	<string>hubbub-staging</string>
 	<key>STORAGE_BUCKET</key>
-	<string>hubbub-159904.appspot.com</string>
+	<string>hubbub-staging.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:113654972557:ios:da5c14a7496ed9b8</string>
+	<string>1:855593303793:ios:027913db98e82451</string>
 	<key>DATABASE_URL</key>
-	<string>https://hubbub-159904.firebaseio.com</string>
+	<string>https://hubbub-staging.firebaseio.com</string>
 </dict>
 </plist>

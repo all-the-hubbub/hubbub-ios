@@ -193,7 +193,7 @@ class SlotsViewController: UIViewController, UITableViewDataSource, UITableViewD
             "userId": user.uid
         ]
         let call = value ? "joinEvent" : "leaveEvent"
-        let url = "https://us-central1-hubbub-159904.cloudfunctions.net/\(call)"
+        let url = "https://\(Config.FunctionsHost)/\(call)"
         
         user.getTokenWithCompletion { (token, err) in
             if err != nil {
