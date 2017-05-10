@@ -18,6 +18,7 @@ class SlotsViewController: UIViewController, UITableViewDataSource, UITableViewD
     // UI
     let appBar = MDCAppBar()
     let slotsTableView:UITableView = UITableView(frame: .zero, style: .plain)
+    let slotsTableFooterView = EmptyStateTableFooterView(insets: UIEdgeInsetsMake(40, 66, 40, 66))
 
     // Properties
     var user:FIRUser
@@ -84,6 +85,11 @@ class SlotsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         slotsTableView.register(ToggleSlotTableViewCell.self, forCellReuseIdentifier: "slotsCell")
         
+        // Slots Footer
+        slotsTableFooterView.loading = true
+        slotsTableFooterView.message = "There are currently no upcoming events, be sure to check back later!"
+        slotsTableView.tableFooterView = slotsTableFooterView
+        
         let now = Date().timeIntervalSince1970
         fetchSlots(startAt: now, limit: 10)
         bindAccountSlots(startAt: now, limit: 10)
@@ -119,6 +125,10 @@ class SlotsViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             strongSelf.slots = newSlots
             strongSelf.slotsTableView.reloadData()
+            strongSelf.slotsTableFooterView.loading = false
+            if newSlots.count > 0 {
+                strongSelf.slotsTableView.tableFooterView = nil
+            }
         })
     }
     

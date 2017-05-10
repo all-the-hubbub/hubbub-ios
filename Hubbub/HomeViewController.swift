@@ -18,7 +18,7 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     let appBar = MDCAppBar()
     let headerView = HomeHeaderView()
     let slotsTableView = UITableView(frame: .zero, style: .plain)
-    let slotsTableFooterView = HomeSlotsTableFooterView()
+    let slotsTableFooterView = EmptyStateTableFooterView(insets: UIEdgeInsetsMake(22, 66, 22, 66))
     
     // Properties
     var user:FIRUser
@@ -75,7 +75,6 @@ class HomeViewController: UIViewController, UITableViewDelegate {
         slotsTableView.backgroundColor = #colorLiteral(red: 0.9333333333, green: 0.9333333333, blue: 0.9333333333, alpha: 1)
         slotsTableView.separatorInset = .zero
         slotsTableView.tableHeaderView = HomeSlotsTableHeaderView(frame: CGRect(x: 0, y: 0, width: 0, height: 60))
-        slotsTableView.tableFooterView = slotsTableFooterView
         view.insertSubview(slotsTableView, at: 0)
         slotsTableView.snp.makeConstraints { (make) in
             make.left.equalToSuperview()
@@ -84,6 +83,11 @@ class HomeViewController: UIViewController, UITableViewDelegate {
             make.bottom.equalToSuperview()
         }
         slotsTableView.register(AccountSlotTableViewCell.self, forCellReuseIdentifier: "slotsCell")
+        
+        // Slots Footer
+        slotsTableFooterView.loading = false
+        slotsTableFooterView.message = "Add an event to hangout with people that share your interests!"
+        slotsTableView.tableFooterView = slotsTableFooterView
         
         // Join Button
         let joinButton = MDCFloatingButton(shape: .default)
