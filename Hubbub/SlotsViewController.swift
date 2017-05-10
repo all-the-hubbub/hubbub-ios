@@ -9,6 +9,7 @@
 import Alamofire
 import Firebase
 import MaterialComponents
+import MaterialComponents.MaterialSnackbar
 import SnapKit
 import UIKit
 
@@ -204,13 +205,18 @@ class SlotsViewController: UIViewController, UITableViewDataSource, UITableViewD
             let headers: HTTPHeaders = [
                 "Authorization": "Bearer \(token!)",
             ]
-            _ = Alamofire.request(
-                url,
-                method: .post,
-                parameters: params,
-                encoding: JSONEncoding.default,
-                headers: headers
-            )
+            Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding.default, headers: headers)
+                .validate(statusCode: 200..<300)
+                .responseData { [weak self] (response) in
+                    guard case let .failure(err) = response.result else { return }
+                    print("API Error: \(err)")
+                    
+                    let message = MDCSnackbarMessage()
+                    message.text = (value) ? "Failed to join event" : "Failed to leave event"
+                    MDCSnackbarManager.show(message)
+                    
+                    self?.reloadCellFor(slotId: slotId)
+                }
         }
     }
 }
