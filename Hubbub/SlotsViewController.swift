@@ -166,6 +166,56 @@ class SlotsViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
         }
     }
+    
+    internal func showConfirmationFor(slot: Slot) {
+        var message: String = ""
+        if let startDate = slot.startDate {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "EEEE, MMM d 'at' h:mm a"
+            message = "Will you show up at \(slot.location!) on \(formatter.string(from: startDate))?\n\nOther Hubbubs will be waiting for you!"
+        }
+        
+        let alert = UIAlertController(title: "Confirm", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [weak self] _ in
+            self?.rsvpFor(slot: slot, willAttend: true)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { [weak self] _ in
+            self?.reloadCellFor(slotId: slot.id)
+        }))
+        present(alert, animated: true)
+    }
+    
+    internal func rsvpFor(slot: Slot, willAttend: Bool) {
+        let params: Parameters = [
+            "id": slot.id,
+            "userId": user.uid,
+            ]
+        let call = willAttend ? "joinEvent" : "leaveEvent"
+        let url = "https://\(Config.FunctionsHost)/\(call)"
+        
+        user.getTokenWithCompletion { token, err in
+            if err != nil {
+                print("Error getting user token: \(err)")
+                return
+            }
+            
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer \(token!)",
+            ]
+            Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding.default, headers: headers)
+                .validate(statusCode: 200 ..< 300)
+                .responseData { [weak self] response in
+                    guard case let .failure(err) = response.result else { return }
+                    print("API Error: \(err)")
+                    
+                    let message = MDCSnackbarMessage()
+                    message.text = willAttend ? "Failed to join event" : "Failed to leave event"
+                    MDCSnackbarManager.show(message)
+                    
+                    self?.reloadCellFor(slotId: slot.id)
+            }
+        }
+    }
 
     // MARK: UITableViewDataSource
 
@@ -197,36 +247,12 @@ class SlotsViewController: UIViewController, UITableViewDataSource, UITableViewD
     // MARK: ToggleSlotTableViewCellDelegate
 
     func toggleSlotTableViewCell(_ cell: ToggleSlotTableViewCell, didSetToggleTo value: Bool) {
-        guard let slotId = cell.slot?.id else { return }
-
-        let params: Parameters = [
-            "id": slotId,
-            "userId": user.uid,
-        ]
-        let call = value ? "joinEvent" : "leaveEvent"
-        let url = "https://\(Config.FunctionsHost)/\(call)"
-
-        user.getTokenWithCompletion { token, err in
-            if err != nil {
-                print("Error getting user token: \(err)")
-                return
-            }
-
-            let headers: HTTPHeaders = [
-                "Authorization": "Bearer \(token!)",
-            ]
-            Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding.default, headers: headers)
-                .validate(statusCode: 200 ..< 300)
-                .responseData { [weak self] response in
-                    guard case let .failure(err) = response.result else { return }
-                    print("API Error: \(err)")
-
-                    let message = MDCSnackbarMessage()
-                    message.text = value ? "Failed to join event" : "Failed to leave event"
-                    MDCSnackbarManager.show(message)
-
-                    self?.reloadCellFor(slotId: slotId)
-                }
+        guard let slot = cell.slot else { return }
+        
+        if value {
+            showConfirmationFor(slot: slot)
+        } else {
+            rsvpFor(slot: slot, willAttend: false)
         }
     }
 }
