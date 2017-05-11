@@ -168,12 +168,16 @@ class SlotsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     internal func showConfirmationFor(slot: Slot) {
-        var message: String = ""
+        var message = "Will you show up"
+        if let location = slot.location {
+            message += " at \(location)"
+        }
         if let startDate = slot.startDate {
             let formatter = DateFormatter()
             formatter.dateFormat = "EEEE, MMM d 'at' h:mm a"
-            message = "Will you show up at \(slot.location!) on \(formatter.string(from: startDate))?\n\nOther Hubbubs will be waiting for you!"
+            message += " on \(formatter.string(from: startDate))"
         }
+        message += "?\n\nOther Hubbubs will be waiting for you!"
 
         let alert = UIAlertController(title: "Confirm", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [weak self] _ in
