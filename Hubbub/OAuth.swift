@@ -41,7 +41,7 @@ class GitHubOAuthClient: OAuthClient {
                 callback(self.oauth2.accessToken, nil)
                 return
             }
-            
+
             // Cancelled or failed
             switch error! {
             case .requestCancelled:

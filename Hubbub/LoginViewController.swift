@@ -30,7 +30,7 @@ class LoginViewController: UIViewController {
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     deinit {
         resumeSnackbar()
     }
@@ -107,15 +107,15 @@ class LoginViewController: UIViewController {
             make.bottom.equalToSuperview().offset(-10)
         }
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         // Prevent Snackbar messages from being displayed in the OAuth SafariViewController.
         // Messages will be resumed via viewDidAppear or deinit
         snackbarToken = MDCSnackbarManager.suspendAllMessages()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         resumeSnackbar()
@@ -131,25 +131,25 @@ class LoginViewController: UIViewController {
             MDCSnackbarManager.resumeMessages(with: token)
         }
     }
-    
+
     internal func toggleLoginButton(enabled: Bool) {
         loginButton.isEnabled = enabled
-        
+
         loginButton.setTitle("Login with GitHub", for: .normal)
         loginButton.setTitle("Logging in...", for: .disabled)
-        
+
         loginButton.setBackgroundColor(ColorSecondary, for: .normal)
         loginButton.setBackgroundColor(ColorSecondary, for: .disabled)
         loginButton.setTitleColor(.white, for: .normal)
         loginButton.setTitleColor(.black, for: .disabled)
     }
-    
+
     internal func loginFailed(tag: String, error: Error) {
         print("\(tag) login failed: \(error)")
         MDCSnackbarManager.show(MDCSnackbarMessage(text: "Login failed"))
         toggleLoginButton(enabled: true)
     }
-    
+
     internal func doLogin() {
         oauthClient.authorize(from: self, callback: { [weak self] accessToken, error in
             // Failed
@@ -157,7 +157,7 @@ class LoginViewController: UIViewController {
                 self?.loginFailed(tag: "OAuth", error: error!)
                 return
             }
-            
+
             // Cancelled
             if accessToken == nil {
                 return
@@ -176,7 +176,7 @@ class LoginViewController: UIViewController {
             if error != nil {
                 self?.loginFailed(tag: "Firebase", error: error!)
                 return
-            }            
+            }
             FIRDatabase.database().reference(withPath: "accounts/\(user!.uid)/githubToken").setValue(accessToken)
         }
     }
