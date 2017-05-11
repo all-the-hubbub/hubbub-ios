@@ -8,6 +8,7 @@
 
 import Firebase
 import MaterialComponents
+import MaterialComponents.MaterialSnackbar
 import SnapKit
 import UIKit
 import Crashlytics
@@ -19,6 +20,7 @@ class LoginViewController: UIViewController {
 
     // Internal Properties
     internal var oauthClient: OAuthClient
+    internal var snackbarToken: MDCSnackbarSuspensionToken?
 
     required init(oauthClient: OAuthClient) {
         self.oauthClient = oauthClient
@@ -27,6 +29,10 @@ class LoginViewController: UIViewController {
 
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        resumeSnackbar()
     }
 
     override func viewDidLoad() {
@@ -79,12 +85,7 @@ class LoginViewController: UIViewController {
         // Login
         loginButton = MDCRaisedButton()
         loginButton.setElevation(2, for: .normal)
-        loginButton.setTitle("Login with GitHub", for: .normal)
-        loginButton.setTitle("Logging in...", for: .disabled)
-        loginButton.setBackgroundColor(ColorSecondary, for: .normal)
-        loginButton.setBackgroundColor(ColorSecondary, for: .disabled)
-        loginButton.setTitleColor(.white, for: .normal)
-        loginButton.setTitleColor(.white, for: .disabled)
+        toggleLoginButton(enabled: true)
         loginButton.addTarget(self, action: #selector(doLogin), for: UIControlEvents.touchUpInside)
         container.addSubview(loginButton)
         loginButton.snp.makeConstraints { (make) -> Void in
@@ -106,36 +107,76 @@ class LoginViewController: UIViewController {
             make.bottom.equalToSuperview().offset(-10)
         }
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Prevent Snackbar messages from being displayed in the OAuth SafariViewController.
+        // Messages will be resumed via viewDidAppear or deinit
+        snackbarToken = MDCSnackbarManager.suspendAllMessages()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        resumeSnackbar()
+    }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
 
     // MARK: Internal
-
+    internal func resumeSnackbar() {
+        if let token = snackbarToken {
+            MDCSnackbarManager.resumeMessages(with: token)
+        }
+    }
+    
+    internal func toggleLoginButton(enabled: Bool) {
+        loginButton.isEnabled = enabled
+        
+        loginButton.setTitle("Login with GitHub", for: .normal)
+        loginButton.setTitle("Logging in...", for: .disabled)
+        
+        loginButton.setBackgroundColor(ColorSecondary, for: .normal)
+        loginButton.setBackgroundColor(ColorSecondary, for: .disabled)
+        loginButton.setTitleColor(.white, for: .normal)
+        loginButton.setTitleColor(.black, for: .disabled)
+    }
+    
+    internal func loginFailed(tag: String, error: Error) {
+        print("\(tag) login failed: \(error)")
+        MDCSnackbarManager.show(MDCSnackbarMessage(text: "Login failed"))
+        toggleLoginButton(enabled: true)
+    }
+    
     internal func doLogin() {
-        oauthClient.authorize(from: self, callback: { [unowned self] accessToken, error in
+        oauthClient.authorize(from: self, callback: { [weak self] accessToken, error in
+            // Failed
             if error != nil {
-                print("OAuth was cancelled or failed: \(error)")
+                self?.loginFailed(tag: "OAuth", error: error!)
                 return
             }
-            print("OAuth successful: access_token=\(accessToken!)")
+            
+            // Cancelled
+            if accessToken == nil {
+                return
+            }
 
-            // Fabric event tracking
+            // Success
             Answers.logLogin(withMethod: "Github", success: true, customAttributes: nil)
-
-            self.loginButton.isEnabled = false
-            self.firebaseSignIn(accessToken: accessToken!)
+            self?.toggleLoginButton(enabled: false)
+            self?.firebaseSignIn(accessToken: accessToken!)
         })
     }
 
     internal func firebaseSignIn(accessToken: String) {
         let credential = FIRGitHubAuthProvider.credential(withToken: accessToken)
-        FIRAuth.auth()?.signIn(with: credential) { user, error in
+        FIRAuth.auth()?.signIn(with: credential) { [weak self] user, error in
             if error != nil {
-                print("Firebase Auth error: \(error)")
+                self?.loginFailed(tag: "Firebase", error: error!)
                 return
-            }
+            }            
             FIRDatabase.database().reference(withPath: "accounts/\(user!.uid)/githubToken").setValue(accessToken)
         }
     }

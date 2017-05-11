@@ -36,12 +36,19 @@ class GitHubOAuthClient: OAuthClient {
             // Break retain cycle
             self.oauth2.authConfig.authorizeContext = nil
 
-            if error != nil {
-                callback(nil, error)
+            // Success
+            if error == nil {
+                callback(self.oauth2.accessToken, nil)
                 return
             }
-
-            callback(self.oauth2.accessToken, nil)
+            
+            // Cancelled or failed
+            switch error! {
+            case .requestCancelled:
+                callback(nil, nil)
+            default:
+                callback(nil, error)
+            }
         }
     }
 
