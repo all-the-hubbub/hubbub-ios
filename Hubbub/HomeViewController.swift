@@ -22,7 +22,6 @@ class HomeViewController: UIViewController, UITableViewDelegate {
 
     // Properties
     var user: FIRUser
-    var oauthClient: OAuthClient
 
     // Database
     internal var profileRef: FIRDatabaseReference?
@@ -30,12 +29,9 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     internal var slotsQuery: FIRDatabaseQuery?
     internal var slotsDatasource: FUITableViewDataSource?
 
-    required init(user: FIRUser, oauthClient: OAuthClient) {
+    required init(user: FIRUser) {
         self.user = user
-        self.oauthClient = oauthClient
-
         super.init(nibName: nil, bundle: nil)
-
         addChildViewController(appBar.headerViewController)
     }
 

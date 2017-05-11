@@ -116,7 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if self.user == nil {
                 vc = LoginViewController(oauthClient: self.oauthClient)
             } else {
-                vc = HomeViewController(user: self.user!, oauthClient: self.oauthClient)
+                vc = HomeViewController(user: self.user!)
             }
             self.rootViewController.setViewControllers([vc], animated: false)
         })
