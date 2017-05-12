@@ -17,7 +17,7 @@ protocol OAuthClient {
 }
 
 class GitHubOAuthClient: OAuthClient {
-    static let REDIRECT_URL = "https://\(Config.StaticHost)/assets/oauth.html"
+    static let REDIRECT_URL = "https://\(Config.StaticHost)/oauth"
 
     internal var oauth2 = OAuth2CodeGrant(settings: [
         "client_id": Config.GitHubOAuthClientID,
