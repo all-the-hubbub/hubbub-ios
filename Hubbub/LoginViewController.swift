@@ -177,7 +177,10 @@ class LoginViewController: UIViewController {
                 self?.loginFailed(tag: "Firebase", error: error!)
                 return
             }
-            FIRDatabase.database().reference(withPath: "accounts/\(user!.uid)/githubToken").setValue(accessToken)
+            FIRDatabase.database().reference(withPath: "accounts/\(user!.uid)").updateChildValues([
+                "githubToken": accessToken,
+                "profileNeedsUpdate": true,
+            ])
         }
     }
 
