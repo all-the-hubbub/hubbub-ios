@@ -34,6 +34,7 @@
 		876508AA1EB6F9E400AE6674 /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876508A91EB6F9E400AE6674 /* Topic.swift */; };
 		87681EC21EBBA1900005A1B8 /* AssignmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87681EC11EBBA1900005A1B8 /* AssignmentViewController.swift */; };
 		876B48181E8D5425006C8005 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876B48171E8D5425006C8005 /* LoginViewController.swift */; };
+		879E43BE1ECB750D0049E7C9 /* GitHubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879E43BD1ECB750D0049E7C9 /* GitHubViewController.swift */; };
 		87D9E1DF1EBA7F35006955E4 /* EmptyStateTableFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D9E1DE1EBA7F35006955E4 /* EmptyStateTableFooterView.swift */; };
 		87DD0B7B1EB3F7240037A1E0 /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DD0B7A1EB3F7240037A1E0 /* HomeHeaderView.swift */; };
 		87DD0B7E1EB3F74E0037A1E0 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DD0B7D1EB3F74E0037A1E0 /* Profile.swift */; };
@@ -99,6 +100,7 @@
 		876508A91EB6F9E400AE6674 /* Topic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Topic.swift; sourceTree = "<group>"; };
 		87681EC11EBBA1900005A1B8 /* AssignmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssignmentViewController.swift; sourceTree = "<group>"; };
 		876B48171E8D5425006C8005 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		879E43BD1ECB750D0049E7C9 /* GitHubViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitHubViewController.swift; sourceTree = "<group>"; };
 		87D9E1DE1EBA7F35006955E4 /* EmptyStateTableFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyStateTableFooterView.swift; sourceTree = "<group>"; };
 		87DD0B7A1EB3F7240037A1E0 /* HomeHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
 		87DD0B7D1EB3F74E0037A1E0 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 				876B48171E8D5425006C8005 /* LoginViewController.swift */,
 				876508A11EB68D2400AE6674 /* SlotsViewController.swift */,
 				874015F31EBD00000095700A /* WebViewController.swift */,
+				879E43BD1ECB750D0049E7C9 /* GitHubViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -579,6 +582,7 @@
 				8763DE881EC13D3B0044E95F /* Config.swift in Sources */,
 				8761393C1EB7EFBF00A2412D /* HomeSlotsTableHeaderView.swift in Sources */,
 				875D85611EA6B70A00DEAE5A /* HomeViewController.swift in Sources */,
+				879E43BE1ECB750D0049E7C9 /* GitHubViewController.swift in Sources */,
 				87064EF21EBBF70C00A1A197 /* AssignmentHeaderView.swift in Sources */,
 				87FD3DD71EA82FEC00B1D8E3 /* OAuth.swift in Sources */,
 				87F1B8431EAFEB4B00AE5535 /* Slot.swift in Sources */,

@@ -6,14 +6,15 @@
 //  Copyright © 2017 All The Hubbub. All rights reserved.
 //
 
+import Alamofire
+import Crashlytics
 import Firebase
 import MaterialComponents
 import MaterialComponents.MaterialSnackbar
 import SnapKit
 import UIKit
-import Crashlytics
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, OAuthDelegate {
 
     // UI
     var loginButton: MDCRaisedButton!
@@ -151,23 +152,8 @@ class LoginViewController: UIViewController {
     }
 
     internal func doLogin() {
-        oauthClient.authorize(from: self, callback: { [weak self] accessToken, error in
-            // Failed
-            if error != nil {
-                self?.loginFailed(tag: "OAuth", error: error!)
-                return
-            }
-
-            // Cancelled
-            if accessToken == nil {
-                return
-            }
-
-            // Success
-            Answers.logLogin(withMethod: "Github", success: true, customAttributes: nil)
-            self?.toggleLoginButton(enabled: false)
-            self?.firebaseSignIn(accessToken: accessToken!)
-        })
+        let vc = GitHubViewController(delegate: self)
+        present(vc, animated: true, completion: nil)
     }
 
     internal func firebaseSignIn(accessToken: String) {
@@ -189,6 +175,28 @@ class LoginViewController: UIViewController {
             let vc = WebViewController(initialURL: url)
             vc.navigationItem.title = "Privacy Policy"
             present(vc, animated: true, completion: nil)
+        }
+    }
+    
+    // MARK: OAuthDelegate
+    
+    func oauthSucceededWithCode(_ code: String) {
+        toggleLoginButton(enabled: false)
+        dismiss(animated: true, completion: nil)
+        
+        let params: Parameters = ["code": code]
+        let url = "https://\(Config.FunctionsHost)/githubToken"
+        Alamofire.request(url, method: .post, parameters: params, encoding: JSONEncoding.default)
+            .validate(statusCode: 200 ..< 300)
+            .responseJSON { [weak self] response in
+                switch response.result {
+                case .success:
+                    if let json = response.result.value as? [String: Any], let token = json["access_token"] as? String {
+                        self?.firebaseSignIn(accessToken: token)
+                    }
+                case .failure(let error):
+                    self?.loginFailed(tag: "OAuth", error: error)
+                }
         }
     }
 }

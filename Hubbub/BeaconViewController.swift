@@ -17,14 +17,18 @@ class BeaconViewController: WebViewController, WKNavigationDelegate {
     // UI
     let spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
 
-    // Properties
-    var slot: Slot
-    var topic: Topic
-
     required init(slot: Slot, topic: Topic) {
-        self.slot = slot
-        self.topic = topic
-        super.init(nibName: nil, bundle: nil)
+        let urlComponents = NSURLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = Config.StaticHost
+        urlComponents.path = "/assets/beacon.html"
+        urlComponents.queryItems = [
+            URLQueryItem(name: "slotId", value: slot.id),
+            URLQueryItem(name: "topicId", value: topic.id),
+            URLQueryItem(name: "topicName", value: topic.name),
+        ]
+
+        super.init(initialURL: urlComponents.url)
     }
 
     required init?(coder _: NSCoder) {
@@ -35,10 +39,10 @@ class BeaconViewController: WebViewController, WKNavigationDelegate {
         super.viewDidLoad()
 
         // WebView
-        webView!.backgroundColor = MDCPalette.blueGrey().tint800
-        webView!.scrollView.backgroundColor = webView!.backgroundColor
-        webView!.isUserInteractionEnabled = false
-        webView!.navigationDelegate = self
+        webView.backgroundColor = MDCPalette.blueGrey().tint800
+        webView.scrollView.backgroundColor = webView.backgroundColor
+        webView.isUserInteractionEnabled = false
+        webView.navigationDelegate = self
 
         // Spinner
         view.addSubview(spinner)
@@ -46,26 +50,6 @@ class BeaconViewController: WebViewController, WKNavigationDelegate {
             make.center.equalToSuperview()
         }
         spinner.startAnimating()
-
-        // Load the beacon page
-        if let url = beaconURL() {
-            loadURL(url)
-        }
-    }
-
-    // MARK: Internal
-
-    internal func beaconURL() -> URL? {
-        let urlComponents = NSURLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = Config.StaticHost
-        urlComponents.path = "/assets/beacon.html"
-        urlComponents.queryItems = [
-            URLQueryItem(name: "slotId", value: slot.id),
-            URLQueryItem(name: "topicId", value: topic.id),
-            URLQueryItem(name: "topicName", value: topic.name),
-        ]
-        return urlComponents.url
     }
 
     // MARK: WKWebViewNavigationDelegate

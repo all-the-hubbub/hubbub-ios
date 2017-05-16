@@ -16,19 +16,18 @@ class WebViewController: UIViewController {
 
     // UI
     let appBar = MDCAppBar()
-    var webView: WKWebView?
+    var webView: WKWebView
 
     // Properties
     var initialURL: URL?
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        addChildViewController(appBar.headerViewController)
-    }
-
-    convenience init(initialURL: URL?) {
-        self.init(nibName: nil, bundle: nil)
+    init(initialURL: URL?, config: WKWebViewConfiguration? = nil) {
+        webView = WKWebView(frame: .zero, configuration: config ?? WKWebViewConfiguration())
         self.initialURL = initialURL
+
+        super.init(nibName: nil, bundle: nil)
+
+        addChildViewController(appBar.headerViewController)
     }
 
     required init?(coder _: NSCoder) {
@@ -52,9 +51,8 @@ class WebViewController: UIViewController {
         )
 
         // WebView
-        webView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
-        view.insertSubview(webView!, at: 0)
-        webView!.snp.makeConstraints { make in
+        view.insertSubview(webView, at: 0)
+        webView.snp.makeConstraints { make in
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.top.equalTo(appBar.headerViewController.headerView.snp.bottom)
@@ -78,6 +76,6 @@ class WebViewController: UIViewController {
     }
 
     internal func loadURL(_ url: URL) {
-        _ = webView?.load(URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData))
+        _ = webView.load(URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData))
     }
 }
