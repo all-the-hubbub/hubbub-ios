@@ -20,11 +20,9 @@ class LoginViewController: UIViewController, OAuthDelegate {
     var loginButton: MDCRaisedButton!
 
     // Internal Properties
-    internal var oauthClient: OAuthClient
     internal var snackbarToken: MDCSnackbarSuspensionToken?
 
-    required init(oauthClient: OAuthClient) {
-        self.oauthClient = oauthClient
+    required init() {
         super.init(nibName: nil, bundle: nil)
     }
 

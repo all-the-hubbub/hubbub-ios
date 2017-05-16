@@ -31,11 +31,6 @@ struct Config {
         dev: "8047073cafed8937f908",
         prod: "077cb2f4568e245a97eb"
     )
-
-    static let GitHubOAuthClientSecret = env(
-        dev: "e7bcb695368e2ed41c2c0a5bdc0b64e8487c0840",
-        prod: "aa4b736a317532b47202cb7c9820bba587e64a70"
-    )
 }
 
 func env<T>(dev development: T, prod production: T) -> T {

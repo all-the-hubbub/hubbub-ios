@@ -22,7 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var user: FIRUser?
     var remoteConfig: FIRRemoteConfig?
-    let oauthClient = GitHubOAuthClient()
 
     lazy var appBuildNumber: Int = {
         var n = Int.max
@@ -61,14 +60,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Ready to launch
         window!.makeKeyAndVisible()
         return true
-    }
-
-    func application(_: UIApplication, open url: URL, sourceApplication _: String?, annotation _: Any) -> Bool {
-        if url.scheme == "hubbub" {
-            oauthClient.handleRedirectURL(url)
-            return true
-        }
-        return false
     }
 
     func applicationDidBecomeActive(_: UIApplication) {
@@ -114,7 +105,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // If not logged in, show the login screen. Otherwise show the home screen.
             var vc: UIViewController
             if self.user == nil {
-                vc = LoginViewController(oauthClient: self.oauthClient)
+                vc = LoginViewController()
             } else {
                 vc = HomeViewController(user: self.user!)
             }

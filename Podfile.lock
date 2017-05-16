@@ -101,7 +101,6 @@ PODS:
   - MaterialComponents/Typography (23.0.1):
     - MaterialComponents/private/Application
   - MDFTextAccessibility (1.2.0)
-  - p2.OAuth2 (3.0.3)
   - Protobuf (3.2.1)
   - SnapKit (3.2.0)
 
@@ -120,7 +119,6 @@ DEPENDENCIES:
   - MaterialComponents/Palettes
   - MaterialComponents/ShadowLayer
   - MaterialComponents/Snackbar
-  - p2.OAuth2 (~> 3.0)
   - SnapKit (~> 3.0)
 
 SPEC CHECKSUMS:
@@ -140,10 +138,9 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 5c046c76a1f859bc9c187e918f18e4fc7bb57b5e
   MaterialComponents: 8666bde1128660f2a3525d03d6b460d2bc34dc3b
   MDFTextAccessibility: 94098925e0853551c5a311ce7c1ecefbe297cdb6
-  p2.OAuth2: 63d8d3e366ac2c43bfe8bfa13b42cfeb908c314e
   Protobuf: 2ccbaf193f6c65adc67745453ca0c13234c32796
   SnapKit: 1ca44df72cfa543218d177cb8aab029d10d86ea7
 
-PODFILE CHECKSUM: 713f984222823d0ec779dd5914efa5d8909f8186
+PODFILE CHECKSUM: 619d58b4cddff1f895a1606f8e15e5b5f54d4bcc
 
 COCOAPODS: 1.2.1
