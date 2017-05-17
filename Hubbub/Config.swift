@@ -9,17 +9,17 @@
 import Foundation
 
 struct Config {
-    static let AppStoreID = env(
-        dev: "",
-        beta: "id1234046078",
-        prod: "id1234046078"
-    )
-
     static let FirebasePlistName = env(
-        dev: "GoogleService-Info-Dev",
+        dev: "GoogleService-Info",
         beta: "GoogleService-Info-Beta",
         prod: "GoogleService-Info-Prod"
     )
+    
+    static let AppStoreID = "id1234046078"
+    
+    //
+    // MODIFY `dev` ENTRIES FOR SETTINGS BELOW THIS LINE
+    //
 
     static let StaticHost = env(
         dev: "<PROJECT_ID>.firebaseapp.com",
@@ -34,7 +34,7 @@ struct Config {
     )
 
     static let GitHubOAuthClientID = env(
-        dev: "",
+        dev: "<GITHUB_OAUTH_CLIENT_ID>",
         beta: "8047073cafed8937f908",
         prod: "077cb2f4568e245a97eb"
     )
