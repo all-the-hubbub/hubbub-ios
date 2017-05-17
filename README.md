@@ -35,7 +35,8 @@ This repository contains the iOS implementation of [Hubbub](https://github.com/a
 1. In Xcode, navigate to the Build Settings for the `Hubbub` target (see image below)
 1. In the `Packaging` section, locate `Product Bundle Identifier`
 1. Edit the `Debug` entry: replace `<DEV_BUNDLE_IDENTIFIER>` with the bundle identifier you chose in step 3 above
-    ![Xcode build settings and bundle identifier field][xcode-bundle-identifier]
+
+![Xcode build settings and bundle identifier field][xcode-bundle-identifier]
 
 ### Update Config
 1. Open `Config.swift` in Xcode
@@ -44,7 +45,8 @@ This repository contains the iOS implementation of [Hubbub](https://github.com/a
 ### Build & Run
 1. Choose the `Hubbub-dev` scheme and select an iPhone simulator of your choosing (or an attached iPhone device)
 1. Click the "play" button to build and run the app
-    ![Xcode scheme dropdown and run button][xcode-scheme-and-run]
+
+![Xcode scheme dropdown and run button][xcode-scheme-and-run]
 
 [xcode-bundle-identifier]: doc/images/xcode-bundle-identifier.png "Set dev bundle identifier"
 [xcode-scheme-and-run]: doc/images/xcode-scheme-and-run.png "Build and run Hubbub-dev scheme"
