@@ -16,7 +16,7 @@ platform :ios do
     # increment_build_number(build_number: ENV['CI_BUILD_ID'])
 
     # set 'export_method' to 'ad-hoc' if your Crashlytics Beta distribution uses ad-hoc provisioning
-    gym(scheme: 'Hubbub-dev', export_method: 'development')
+    gym(scheme: 'Hubbub-beta', export_method: 'development')
 
     emails = values[:test_email] ? values[:test_email] : ['judytuna@gmail.com'] # You can list more emails here
     groups = values[:test_email] ? nil : ['firebaes'] # You can define groups on the web and reference them here
